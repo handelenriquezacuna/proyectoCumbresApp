@@ -1,6 +1,5 @@
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
-import { SectionAnchor } from '@/components/layout/SectionAnchor';
 import { TocSidebar } from '@/components/layout/TocSidebar';
 import { Aplicaciones } from '@/sections/04-Aplicaciones';
 import { CasoCumbres } from '@/sections/05-CasoCumbres';
@@ -10,6 +9,7 @@ import { Futuro } from '@/sections/07-Futuro';
 import { Hero } from '@/sections/01-Hero';
 import { Implementacion } from '@/sections/06-Implementacion';
 import { Metodos } from '@/sections/03-Metodos';
+import { QuizSection } from '@/sections/09-Quiz';
 
 /**
  * Composición principal de la aplicación. El Hero ocupa el ancho completo;
@@ -44,21 +44,7 @@ function App() {
             <Implementacion />
             <Futuro />
             <Conclusiones />
-
-            <SectionAnchor id="quiz">
-              <header className="mb-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
-                  Capítulo 8
-                </p>
-                <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-                  Quiz de Repaso
-                </h2>
-              </header>
-              <p className="rounded-md border border-dashed border-slate-300 bg-slate-100 p-4 text-sm text-slate-600">
-                Próximamente: cuestionario interactivo de 10 preguntas sobre
-                los métodos numéricos aplicados al caso Cumbres.
-              </p>
-            </SectionAnchor>
+            <QuizSection />
           </main>
         </div>
       </div>
