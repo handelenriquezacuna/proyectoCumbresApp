@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+# ⚡ Cumbres — Demand Forecasting
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web educativa que demuestra interpolación polinómica de Newton, Lagrange y ajuste por
+mínimos cuadrados aplicados a la predicción de demanda eléctrica en un centro de datos.
 
-Currently, two official plugins are available:
+Proyecto académico del curso **MA-108 Métodos Numéricos**, Universidad Fidélitas, Grupo 3
+(lunes noche), profesor Edwin Villalobos Martínez. Entrega Avance 2: **2 ago 2026**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+🔗 **URL pública:** https://handelenriquezacuna.github.io/proyectoCumbresApp/
 
-## React Compiler
+## Historia que cuenta
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Datos discretos (24 puntos kW/hora del Cumbres Data Center S.A. ficticio, calibrado con Uptime
+Institute 2024) → 3 métodos numéricos → comparación de errores (MSE, MAE, MAPE, R²) → conclusión
+sobre cuál método es más preciso y cuándo usar cada uno.
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Vite 5 + React 18 + TypeScript 5 (strict)
+- Tailwind CSS 3
+- Recharts (gráficos), KaTeX (ecuaciones), Zustand (estado), pdfmake (PDF)
+- Vitest + Testing Library (tests)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Comandos
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install        # instalar deps
+npm run dev        # dev server en :5173
+npm test           # correr tests
+npm run typecheck  # tsc --noEmit
+npm run lint       # eslint
+npm run build      # build de producción a ./dist
+npm run deploy     # publica ./dist a la rama gh-pages
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Estructura
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/lib/methods/       # newton, lagrange, leastSquares, errors, linalg
+src/lib/data/          # dataset Cumbres (24 puntos)
+src/lib/export/        # csv, pdf
+src/state/             # zustand store
+src/components/        # ui + math + data + methods + compare + quiz + exports
+src/sections/          # 7 secciones narrativas + Hero + Quiz
+tests/                 # unit + componentes
+docs/MASTER_PROMPT.md  # reconstrucción autocontenida del proyecto
+```
+
+## Documentación
+
+- [`docs/MASTER_PROMPT.md`](docs/MASTER_PROMPT.md) — prompt autocontenido para recrear el proyecto
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — decisiones de arquitectura
+- [`docs/DATASET.md`](docs/DATASET.md) — origen y calibración del dataset
+- Cerebro académico del proyecto: `~/Documents/fidelitasHan/metodosNumericos/cerebro/`
