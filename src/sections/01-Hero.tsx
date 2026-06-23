@@ -28,9 +28,10 @@ export function Hero() {
         </p>
         <p className="mx-auto mb-10 max-w-2xl text-sm text-slate-300 sm:text-base">
           El consumo energético de un data center Tier III sigue patrones
-          horarios que pueden modelarse con métodos numéricos clásicos. Este
-          informe interactivo recorre los fundamentos, aplica cuatro técnicas
-          al caso Cumbres y compara sus errores sobre datos reales.
+          horarios estables que pueden modelarse con métodos numéricos
+          clásicos (Uptime Institute, 2024). Este informe interactivo recorre
+          los fundamentos, aplica cuatro técnicas al caso Cumbres y compara
+          sus errores sobre datos calibrados con la literatura del sector.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <a
