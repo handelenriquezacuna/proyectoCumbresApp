@@ -1,6 +1,4 @@
-import { InlineMath } from 'react-katex';
-import 'katex/dist/katex.min.css';
-import { KatexEquation } from '@/components/math/KatexEquation';
+import { InlineKatex, KatexEquation } from '@/components/math/KatexEquation';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
 
 /**
@@ -34,7 +32,7 @@ export function Metodos() {
       </h3>
       <p className="mb-3 text-base leading-relaxed text-slate-700">
         La forma de Newton expresa el polinomio interpolante mediante
-        diferencias divididas <InlineMath math="f[x_0,\dots,x_k]" />, lo que
+        diferencias divididas <InlineKatex latex="f[x_0,\dots,x_k]" />, lo que
         permite agregar nuevos puntos sin recomputar el sistema completo
         (Burden y Faires, 2017).
       </p>
@@ -50,11 +48,11 @@ export function Metodos() {
       <p className="mb-3 text-base leading-relaxed text-slate-700">
         Lagrange construye explícitamente una base de polinomios cardinales
         <span className="mx-1">
-          <InlineMath math="L_k(x)" />
+          <InlineKatex latex="L_k(x)" />
         </span>
         que valen 1 en
         <span className="mx-1">
-          <InlineMath math="x_k" />
+          <InlineKatex latex="x_k" />
         </span>
         y 0 en los demás nodos. Es elegante en su formulación, pero costoso si
         la malla cambia (Chapra y Canale, 2015).
@@ -75,10 +73,10 @@ export function Metodos() {
       </h3>
       <p className="mb-3 text-base leading-relaxed text-slate-700">
         Cuando los datos contienen ruido de medición, forzar la interpolación
-        amplifica el error. La regresión polinómica de grado <InlineMath math="m" /> resuelve
+        amplifica el error. La regresión polinómica de grado <InlineKatex latex="m" /> resuelve
         el sistema normal
         <span className="mx-1">
-          <InlineMath math="(X^{\mathsf T} X)\,\boldsymbol{\beta} = X^{\mathsf T} \mathbf{y}" />
+          <InlineKatex latex="(X^{\mathsf T} X)\,\boldsymbol{\beta} = X^{\mathsf T} \mathbf{y}" />
         </span>
         , una ecuación lineal bien estudiada (Burden y Faires, 2017).
       </p>

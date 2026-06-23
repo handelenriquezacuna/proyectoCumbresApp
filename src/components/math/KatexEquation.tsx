@@ -1,4 +1,5 @@
-import { BlockMath, InlineMath } from 'react-katex';
+import { useEffect, useRef } from 'react';
+import katex from 'katex';
 import 'katex/dist/katex.min.css';
 
 export type CumbresAccent =
@@ -34,11 +35,37 @@ const ACCENT_BORDER: Record<CumbresAccent, string> = {
 };
 
 /**
- * Renderiza una expresión LaTeX vía react-katex con un estilo de card:
- * fondo suave, borde izquierdo coloreado (palette cumbres), centrado y
- * con scroll horizontal en mobile para ecuaciones largas. Cuando se
- * necesita math en línea con el texto, usar `<InlineMath />` directamente
- * o pasar `displayMode={false}`.
+ * Hook que renderiza una expresión LaTeX a un nodo DOM via katex.render directo
+ * (sin react-katex). Esto evita problemas con dangerouslySetInnerHTML y permite
+ * que las clases CSS de KaTeX se apliquen sin interferencia.
+ */
+function useKatex(latex: string, displayMode: boolean) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    try {
+      katex.render(latex, ref.current, {
+        displayMode,
+        throwOnError: false,
+        errorColor: '#dc2626',
+        strict: 'ignore',
+        output: 'html',
+      });
+    } catch (err) {
+      if (ref.current) {
+        ref.current.textContent = latex;
+      }
+      // eslint-disable-next-line no-console
+      console.error('[KatexEquation] render error', err);
+    }
+  }, [latex, displayMode]);
+  return ref;
+}
+
+/**
+ * Renderiza una expresión LaTeX en bloque con estilo de card (borde izquierdo
+ * de color por sección + fondo suave + caption opcional). Para math en línea,
+ * usar `InlineKatex` o pasar `displayMode={false}`.
  */
 export function KatexEquation({
   latex,
@@ -49,12 +76,10 @@ export function KatexEquation({
   accent,
   bare = false,
 }: KatexEquationProps) {
+  const ref = useKatex(latex, displayMode);
+
   if (!displayMode) {
-    return (
-      <span className={className} aria-label={ariaLabel} role="math">
-        <InlineMath math={latex} />
-      </span>
-    );
+    return <span ref={ref} className={className} aria-label={ariaLabel} role="math" />;
   }
 
   if (bare) {
@@ -64,7 +89,7 @@ export function KatexEquation({
         aria-label={ariaLabel}
         role="math"
       >
-        <BlockMath math={latex} />
+        <span ref={ref} />
       </div>
     );
   }
@@ -81,7 +106,7 @@ export function KatexEquation({
   return (
     <figure className={wrapper} aria-label={ariaLabel} role="math">
       <div className="overflow-x-auto">
-        <BlockMath math={latex} />
+        <span ref={ref} />
       </div>
       {caption ? (
         <figcaption className="mt-2 text-center text-xs italic text-slate-500">
@@ -90,6 +115,15 @@ export function KatexEquation({
       ) : null}
     </figure>
   );
+}
+
+/**
+ * Math en línea para usar dentro de párrafos. Es una conveniencia equivalente
+ * a `<KatexEquation latex="..." displayMode={false} />`.
+ */
+export function InlineKatex({ latex, className }: { latex: string; className?: string }) {
+  const ref = useKatex(latex, false);
+  return <span ref={ref} className={className} role="math" />;
 }
 
 export default KatexEquation;
