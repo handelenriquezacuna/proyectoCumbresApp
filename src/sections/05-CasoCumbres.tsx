@@ -41,7 +41,16 @@ export function CasoCumbres() {
         total entregada al sitio y la potencia consumida por la carga de TI:
       </p>
 
-      <KatexEquation latex={String.raw`\mathrm{PUE} = \frac{P_{\text{total instalación}}}{P_{\text{equipos de TI}}}, \qquad 1.55 = \frac{P_{\text{total}}}{P_{\text{TI}}}`} />
+      <KatexEquation
+        accent="caso"
+        latex={String.raw`\mathrm{PUE} = \frac{E_{\text{total}}}{E_{\text{TI}}}`}
+        caption="Energía total del sitio dividida entre energía consumida por la carga de TI."
+      />
+      <KatexEquation
+        accent="caso"
+        latex={String.raw`\mathrm{PUE}_{\text{Cumbres}} = \frac{E_{\text{total}}}{E_{\text{TI}}} = 1.55`}
+        caption="Valor de calibración del caso Cumbres (Uptime Institute, 2024)."
+      />
 
       <p className="mb-6 mt-4 text-base leading-relaxed text-slate-700">
         El dataset de trabajo contiene 24 observaciones horarias (h, kW)

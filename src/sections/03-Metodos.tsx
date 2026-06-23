@@ -1,3 +1,5 @@
+import { InlineMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
 import { KatexEquation } from '@/components/math/KatexEquation';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
 
@@ -32,32 +34,64 @@ export function Metodos() {
       </h3>
       <p className="mb-3 text-base leading-relaxed text-slate-700">
         La forma de Newton expresa el polinomio interpolante mediante
-        diferencias divididas, lo que permite agregar nuevos puntos sin
-        recomputar el sistema completo (Burden y Faires, 2017).
+        diferencias divididas <InlineMath math="f[x_0,\dots,x_k]" />, lo que
+        permite agregar nuevos puntos sin recomputar el sistema completo
+        (Burden y Faires, 2017).
       </p>
-      <KatexEquation latex={String.raw`P_n(x) = f[x_0] + \sum_{k=1}^{n} f[x_0,\ldots,x_k] \prod_{j=0}^{k-1} (x - x_j)`} />
+      <KatexEquation
+        accent="metodos"
+        latex={String.raw`P_n(x) = f[x_0] + \sum_{k=1}^{n} f[x_0,\ldots,x_k] \prod_{j=0}^{k-1} (x - x_j)`}
+        caption="Forma de Newton para el polinomio interpolante de grado n."
+      />
 
       <h3 className="mt-5 text-lg font-semibold text-slate-900">
         Polinomios de Lagrange
       </h3>
       <p className="mb-3 text-base leading-relaxed text-slate-700">
         Lagrange construye explícitamente una base de polinomios cardinales
-        L<sub>k</sub>(x) que valen 1 en x<sub>k</sub> y 0 en los demás nodos. Es
-        elegante en su formulación, pero costoso si la malla cambia (Chapra y
-        Canale, 2015).
+        <span className="mx-1">
+          <InlineMath math="L_k(x)" />
+        </span>
+        que valen 1 en
+        <span className="mx-1">
+          <InlineMath math="x_k" />
+        </span>
+        y 0 en los demás nodos. Es elegante en su formulación, pero costoso si
+        la malla cambia (Chapra y Canale, 2015).
       </p>
-      <KatexEquation latex={String.raw`P_n(x) = \sum_{k=0}^{n} y_k\, L_k(x), \quad L_k(x) = \prod_{\substack{j=0 \\ j \ne k}}^{n} \frac{x - x_j}{x_k - x_j}`} />
+      <KatexEquation
+        accent="metodos"
+        latex={String.raw`P_n(x) = \sum_{k=0}^{n} y_k\, L_k(x)`}
+        caption="Polinomio de Lagrange como combinación lineal de polinomios base."
+      />
+      <KatexEquation
+        accent="metodos"
+        latex={String.raw`L_k(x) = \prod_{\substack{j=0 \\ j \ne k}}^{n} \frac{x - x_j}{x_k - x_j}`}
+        caption="Polinomio cardinal de Lagrange asociado al nodo k."
+      />
 
       <h3 className="mt-5 text-lg font-semibold text-slate-900">
         Mínimos cuadrados
       </h3>
       <p className="mb-3 text-base leading-relaxed text-slate-700">
         Cuando los datos contienen ruido de medición, forzar la interpolación
-        amplifica el error. La regresión polinómica de grado m resuelve el
-        sistema normal X<sup>T</sup>X β = X<sup>T</sup>y, una ecuación lineal
-        bien estudiada (Burden y Faires, 2017).
+        amplifica el error. La regresión polinómica de grado <InlineMath math="m" /> resuelve
+        el sistema normal
+        <span className="mx-1">
+          <InlineMath math="(X^{\mathsf T} X)\,\boldsymbol{\beta} = X^{\mathsf T} \mathbf{y}" />
+        </span>
+        , una ecuación lineal bien estudiada (Burden y Faires, 2017).
       </p>
-      <KatexEquation latex={String.raw`\min_{\boldsymbol{\beta}} \sum_{i=0}^{N-1} \left(y_i - \sum_{j=0}^{m} \beta_j x_i^{\,j}\right)^2 \;\Longleftrightarrow\; (X^{\mathsf T} X)\, \boldsymbol{\beta} = X^{\mathsf T} \mathbf{y}`} />
+      <KatexEquation
+        accent="metodos"
+        latex={String.raw`\min_{\boldsymbol{\beta}} \sum_{i=0}^{N-1} \left(y_i - \sum_{j=0}^{m} \beta_j x_i^{\,j}\right)^2`}
+        caption="Función objetivo de mínimos cuadrados ordinarios."
+      />
+      <KatexEquation
+        accent="metodos"
+        latex={String.raw`(X^{\mathsf T} X)\, \boldsymbol{\beta} = X^{\mathsf T} \mathbf{y}`}
+        caption="Sistema normal: condición de primer orden del problema anterior."
+      />
 
       <h3 className="mt-5 text-lg font-semibold text-slate-900">
         Fenómeno de Runge

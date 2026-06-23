@@ -32,7 +32,17 @@ export function Conceptos() {
         máxima registrada en el período.
       </p>
 
-      <KatexEquation latex={String.raw`D(t) = \frac{dE(t)}{dt}, \qquad E(t_2) - E(t_1) = \int_{t_1}^{t_2} D(\tau)\, d\tau`} />
+      <KatexEquation
+        accent="conceptos"
+        latex={String.raw`D(t) = \frac{dE(t)}{dt}`}
+        caption="Demanda instantánea como derivada de la energía consumida."
+      />
+
+      <KatexEquation
+        accent="conceptos"
+        latex={String.raw`E(t_2) - E(t_1) = \int_{t_1}^{t_2} D(\tau)\, d\tau`}
+        caption="Energía consumida en un intervalo como integral de la demanda."
+      />
 
       <p className="mb-4 mt-4 text-base leading-relaxed text-slate-700">
         En la práctica, los sistemas SCADA muestrean la potencia a intervalos
