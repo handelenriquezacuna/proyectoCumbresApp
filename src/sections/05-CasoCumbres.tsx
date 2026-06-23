@@ -1,6 +1,8 @@
 import { Card } from '@/components/ui/Card';
 import { DatasetChart } from '@/components/data/DatasetChart';
 import { DatasetTable } from '@/components/data/DatasetTable';
+import { CsvDownloadButton } from '@/components/exports/CsvDownloadButton';
+import { PdfDownloadButton } from '@/components/exports/PdfDownloadButton';
 import { KatexEquation } from '@/components/math/KatexEquation';
 import { MethodPlayground } from '@/components/methods/MethodPlayground';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
@@ -70,6 +72,17 @@ export function CasoCumbres() {
       <Card>
         <MethodPlayground />
       </Card>
+
+      <div className="mt-6 flex flex-col gap-3 rounded-md border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-slate-700">
+          Exportá los datos y el reporte ejecutivo del método activo para
+          adjuntar al informe del curso.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <CsvDownloadButton />
+          <PdfDownloadButton />
+        </div>
+      </div>
     </SectionAnchor>
   );
 }
