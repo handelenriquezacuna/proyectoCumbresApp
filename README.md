@@ -230,8 +230,7 @@ y en `docs/MASTER_PROMPT.md`.
 
 ---
 
-## 👥 Equipo
+## Equipo
 
-Grupo 3, MA-108 Métodos Numéricos — II Cuatrimestre 2026:
-Handel Enríquez Acuña · Lizzy Castro Duarte · Esteban Rivera Fallas · Ariatna Quirós Rojas ·
-Diego Morales Hernández.
+MA-108 Métodos Numéricos — II Cuatrimestre 2026:
+Handel Enríquez Acuña
