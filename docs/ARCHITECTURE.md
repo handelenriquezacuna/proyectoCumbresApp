@@ -1,5 +1,43 @@
 # Architecture — Decisions Log
 
+## Construcción multi-agente
+
+La app fue construida con un workflow orquestado en Claude Code que ejecutó 14 fases en pipeline,
+con patrón _work + reviewer adversarial_ en las fases críticas:
+
+```mermaid
+flowchart TD
+    A[👤 Scaffold<br/>main loop · Vite + deps + git init]
+    A --> B[🧮 Math core<br/>newton · lagrange · MMC · errores]
+    B --> BR{{🔍 Math review<br/>adversarial}}
+    BR --> C[💾 Data + State<br/>dataset + zustand]
+    C --> D[🎨 UI primitives + Layout<br/>Button · Card · Header · TOC]
+    D --> E[⚙️ Feature components<br/>Playground · ErrorComparison]
+    E --> F[✍️ Narrativa<br/>7 secciones APA]
+    F --> FR{{🔍 Narrative review<br/>adversarial}}
+    FR --> G[🧪 Quiz<br/>5 preguntas]
+    G --> H[📦 Exports<br/>CSV + PDF pdfmake]
+    H --> HR{{🔍 Export review<br/>adversarial}}
+    HR --> I[🤖 CI/CD<br/>GitHub Actions]
+    I --> J[📚 Docs + MASTER_PROMPT]
+    J --> K[🧠 Cerebro update<br/>09-App-Cumbres]
+    K --> Z[✅ Orchestrator<br/>sign-off]
+
+    classDef review fill:#fef3c7,stroke:#d97706,color:#78350f
+    class BR,FR,HR review
+```
+
+Cada fase _work_ escribe los archivos asignados, corre `typecheck + test + build`, y commitea con
+prefijo convencional. Las fases _review_ son agentes adversariales que buscan defectos y los
+corrigen en sitio. Total: 14 agentes, ~503k tokens.
+
+Hubo un commit de fix adicional posterior al workflow:
+[`6aa316c`](https://github.com/handelenriquezacuna/proyectoCumbresApp/commit/6aa316c) reemplazó
+`react-katex` por llamadas directas a `katex.render()` para resolver una incompatibilidad con
+React 19 que rompía la renderización de `\frac` y `\,`. Y el walkthrough de 9 pasos
+([`261a493`](https://github.com/handelenriquezacuna/proyectoCumbresApp/commit/261a493)) se añadió
+de forma incremental sobre el resultado del workflow.
+
 ## Stack
 
 | Decisión | Alternativa descartada | Por qué |
@@ -9,7 +47,7 @@
 | **Tailwind CSS 3** | CSS Modules / styled-components | Mobile-first sin overhead; no hay diseñador en el equipo. |
 | **Zustand** | Redux / Context API | 1 KB, sin boilerplate; estado mínimo (método, grado, sampleX, quiz). |
 | **Recharts** | Plotly / Chart.js | Declarativo y React-nativo; suficiente para 24 puntos + curvas. |
-| **react-katex** | MathJax | KaTeX renderiza en cliente sin server-side; mucho más rápido. |
+| **KaTeX directo (sin react-katex)** | MathJax · react-katex | KaTeX renderiza en cliente sin server-side. Usamos `katex.render()` desde un `useRef + useEffect` porque `react-katex@3.1.0` declara peer `react<20` e introduce un fallo de render en React 19 que rompe `\frac` y `\,`. |
 | **pdfmake** | jsPDF | Declarative JSON para tablas/secciones complejas; mejor para reporte multi-sección. |
 | **Vitest** | Jest | Comparte config con Vite; arranque instantáneo. |
 | **Single-page scroll + hash anchors** | React Router multi-page | Storytelling fluido, una URL pública, mejor SEO/share. |
