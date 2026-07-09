@@ -11,7 +11,6 @@ import { Implementacion } from '@/sections/06-Implementacion';
 import { Metodos } from '@/sections/03-Metodos';
 import { QuizSection } from '@/sections/09-Quiz';
 import { WalkthroughSection } from '@/sections/10-Walkthrough';
-import { PlanEntrega } from '@/sections/11-PlanEntrega';
 
 /**
  * Composición principal de la aplicación. El Hero ocupa el ancho completo;
@@ -48,7 +47,6 @@ function App() {
             <Conclusiones />
             <WalkthroughSection />
             <QuizSection />
-            <PlanEntrega />
           </main>
         </div>
       </div>
