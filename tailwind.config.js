@@ -12,6 +12,7 @@ export default {
           implementacion: '#10b981',// verde
           futuro: '#f97316',        // naranja
           conclusiones: '#eab308',  // amarillo
+          plan: '#6366f1',           // índigo
         },
       },
     },
