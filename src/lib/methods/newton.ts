@@ -1,5 +1,6 @@
 import type { FitResult, Point } from './types';
 import { mae, mape, mse, rSquared } from './errors';
+import { trunc5 } from '@/lib/format';
 
 /**
  * Compute Newton's divided differences for a set of (x, y) data points.
@@ -9,8 +10,18 @@ import { mae, mape, mse, rSquared } from './errors';
  *
  *   P(x) = a_0 + a_1 (x - x_0) + a_2 (x - x_0)(x - x_1) + ...
  *
+ * A escala machote (hasta 6 nodos, el máximo que tabula el Excel del
+ * curso) cada diferencia dividida se trunca a 5 decimales en cascada
+ * (TRUNC), de modo que la tabla interactiva coincide dígito a dígito con
+ * la hoja de cálculo y con el documento del equipo. Con más nodos (p.ej.
+ * la demo de Runge sobre los 24 puntos) se usa precisión completa: ahí la
+ * truncación multiplicada por productos (x-x_0)···(x-x_22) ~ 1e20 haría
+ * explotar el polinomio incluso en los propios nodos.
+ *
  * Reference: Burden & Faires (2017), Numerical Analysis, ch. 3.
  */
+export const MACHOTE_MAX_NODES = 6;
+
 export function dividedDifferences(points: Point[]): number[] {
   const n = points.length;
   if (n === 0) return [];
@@ -31,7 +42,8 @@ export function dividedDifferences(points: Point[]): number[] {
           `dividedDifferences: duplicated x value at indices ${i} and ${i + j}`,
         );
       }
-      F[i]![j] = (F[i + 1]![j - 1]! - F[i]![j - 1]!) / dx;
+      const dd = (F[i + 1]![j - 1]! - F[i]![j - 1]!) / dx;
+      F[i]![j] = n <= MACHOTE_MAX_NODES ? trunc5(dd) : dd;
     }
   }
 
@@ -47,15 +59,22 @@ export function dividedDifferences(points: Point[]): number[] {
  *
  * `coefs` must come from `dividedDifferences` and `xs` is the array of
  * node x-coordinates in the same order as the original points.
+ *
+ * A escala machote (≤ 6 nodos) evalúa término a término como la fila
+ * "Img por ai": cada término a_k·(x-x_0)···(x-x_{k-1}) se trunca a 5
+ * decimales y la imagen final es la SUM de los términos (sin truncar),
+ * igual que en Excel. Con más nodos evalúa con precisión completa.
  */
 export function evalNewton(coefs: number[], xs: number[], x: number): number {
   const n = coefs.length;
   if (n === 0) return 0;
-  // Horner-style nested evaluation:
-  //   P(x) = (((a_n)(x - x_{n-1}) + a_{n-1})(x - x_{n-2}) + ...) (x - x_0) + a_0
-  let value = coefs[n - 1]!;
-  for (let i = n - 2; i >= 0; i--) {
-    value = value * (x - xs[i]!) + coefs[i]!;
+  const machote = n <= MACHOTE_MAX_NODES;
+  let value = coefs[0]!;
+  let prod = 1;
+  for (let k = 1; k < n; k++) {
+    prod *= x - xs[k - 1]!;
+    const term = coefs[k]! * prod;
+    value += machote ? trunc5(term) : term;
   }
   return value;
 }

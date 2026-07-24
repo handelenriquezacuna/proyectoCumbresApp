@@ -13,6 +13,7 @@ export default {
           futuro: '#f97316',        // naranja
           conclusiones: '#eab308',  // amarillo
           plan: '#6366f1',           // índigo
+          hoja: '#217346',           // verde Excel
         },
       },
     },

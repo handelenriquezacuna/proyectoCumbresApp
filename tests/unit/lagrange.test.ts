@@ -6,7 +6,9 @@ import {
 } from '@/lib/methods/newton';
 import { QUADRATIC } from '../fixtures/knownPolynomials';
 
-const TOL = 1e-8;
+// Con la convención TRUNC 5 del machote, Newton y Lagrange difieren solo
+// por ruido de truncación: cada término aporta hasta 1e-5 de discrepancia.
+const TOL = 1e-4;
 
 describe('Lagrange interpolation', () => {
   it('matches Newton at 50 random x in [0, 2]', () => {

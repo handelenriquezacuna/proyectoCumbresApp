@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/Button';
 import { Slider } from '@/components/ui/Slider';
 import { Select } from '@/components/ui/Select';
 import { Card } from '@/components/ui/Card';
-import { formatNumber } from '@/lib/format';
+import { fmtTrunc5 } from '@/lib/format';
+import { ExcelSheet, type ExcelRow } from '@/components/excel/ExcelSheet';
 import { linearInterpolate, neighbors, pickNearestN, sampleFit } from './helpers';
 import { MiniChart } from './MiniChart';
 
@@ -93,9 +94,9 @@ function StepLinear() {
       <div className="rounded-md border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
         <p className="font-semibold">Resultado lineal a las 14:30</p>
         <p className="mt-1">
-          Estimación: <span className="font-mono">{formatNumber(estimate, 1)}</span> kW · Error
+          Estimación: <span className="font-mono">{fmtTrunc5(estimate)}</span> kW · Error
           aproximado vs. verdad sintética:{' '}
-          <span className="font-mono">{formatNumber(errorPct, 2)}%</span>
+          <span className="font-mono">{fmtTrunc5(errorPct)}%</span>
         </p>
       </div>
       <p className="text-sm leading-relaxed text-slate-600">
@@ -166,7 +167,7 @@ function StepNewton() {
       <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-900">
         <p className="font-semibold">Estimación a las 14:30</p>
         <p className="mt-1">
-          Con {nPoints} puntos vecinos: <span className="font-mono">{formatNumber(estimate, 1)}</span> kW ·
+          Con {nPoints} puntos vecinos: <span className="font-mono">{fmtTrunc5(estimate)}</span> kW ·
           Polinomio de grado <span className="font-mono">{selected.length - 1}</span>
         </p>
       </div>
@@ -198,6 +199,23 @@ function StepLagrange() {
     diff: Math.abs(newton.evaluate(x) - lagrange.evaluate(x)),
   }));
 
+  const lagrangeSheet: ReadonlyArray<ExcelRow> = [
+    [
+      { value: 'Hora', kind: 'header' },
+      { value: 'Newton (kW)', kind: 'header' },
+      { value: 'Lagrange (kW)', kind: 'header' },
+      { value: '|diferencia|', kind: 'header' },
+    ],
+    ...rows.map(
+      (r): ExcelRow => [
+        { value: r.x, kind: 'input' },
+        { value: r.newton },
+        { value: r.lagrange },
+        { value: r.diff < 1e-9 ? '< 1e-9' : r.diff.toExponential(2) },
+      ],
+    ),
+  ];
+
   const newtonSeries = sampleFit(newton.evaluate, 12, 17, 80, [1100, 1600]);
   const lagrangeSeries = sampleFit(lagrange.evaluate, 12, 17, 80, [1100, 1600]);
 
@@ -213,30 +231,10 @@ function StepLagrange() {
         garantiza que ambos métodos producen <em>exactamente</em> el mismo
         polinomio. Veamos la evidencia numérica con 5 puntos:
       </p>
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="bg-slate-100 text-left text-slate-700">
-              <th className="px-3 py-2">Hora</th>
-              <th className="px-3 py-2 text-right">Newton (kW)</th>
-              <th className="px-3 py-2 text-right">Lagrange (kW)</th>
-              <th className="px-3 py-2 text-right">|diferencia|</th>
-            </tr>
-          </thead>
-          <tbody className="font-mono">
-            {rows.map((r) => (
-              <tr key={r.x} className="border-b border-slate-100">
-                <td className="px-3 py-1.5">{formatNumber(r.x, 2)}</td>
-                <td className="px-3 py-1.5 text-right">{formatNumber(r.newton, 4)}</td>
-                <td className="px-3 py-1.5 text-right">{formatNumber(r.lagrange, 4)}</td>
-                <td className="px-3 py-1.5 text-right text-emerald-700">
-                  {r.diff < 1e-9 ? '< 1e-9' : r.diff.toExponential(2)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ExcelSheet
+        rows={lagrangeSheet}
+        ariaLabel="Comparación numérica Newton vs Lagrange"
+      />
       <MiniChart
         observed={CUMBRES_POINTS.map((p) => ({ x: p.x, y: p.y }))}
         fits={[
@@ -296,7 +294,7 @@ function StepRunge() {
         <p className="font-semibold">⚠️ Fenómeno de Runge</p>
         <p className="mt-1">
           Entre las 22 y 23 horas, el polinomio de grado 23 alcanza{' '}
-          <span className="font-mono">{formatNumber(peakOscillation, 0)}</span> kW —
+          <span className="font-mono">{fmtTrunc5(peakOscillation)}</span> kW —
           un valor físicamente imposible (la carga nunca pasa de 1500 kW). El
           gráfico está recortado a [1100, 1600] para que el lienzo siga siendo
           legible.
@@ -361,7 +359,7 @@ function StepLeastSquares() {
           >
             <div className="font-semibold uppercase tracking-wide">{k}</div>
             <div className="mt-1 font-mono text-sm">
-              {formatNumber(fit.metrics[k], k === 'r2' ? 4 : 2)}
+              {fmtTrunc5(fit.metrics[k])}
             </div>
           </div>
         ))}
@@ -396,6 +394,27 @@ function StepCompare() {
 
   const minMse = Math.min(...rows.map((r) => r.fit.metrics.mse));
 
+  const compareSheet: ReadonlyArray<ExcelRow> = [
+    [
+      { value: 'Método', kind: 'header' },
+      { value: 'MSE', kind: 'header' },
+      { value: 'MAE', kind: 'header' },
+      { value: 'MAPE (%)', kind: 'header' },
+      { value: 'R²', kind: 'header' },
+    ],
+    ...rows.map((r): ExcelRow => {
+      const isBest = r.fit.metrics.mse === minMse;
+      const kind = isBest ? ('result' as const) : ('computed' as const);
+      return [
+        { value: isBest ? `${r.name} ★` : r.name, kind: isBest ? 'result' : 'label' },
+        { value: r.fit.metrics.mse, kind },
+        { value: r.fit.metrics.mae, kind },
+        { value: r.fit.metrics.mape, kind },
+        { value: r.fit.metrics.r2, kind },
+      ];
+    }),
+  ];
+
   return (
     <div className="space-y-4">
       <p className="text-base leading-relaxed text-slate-700">
@@ -414,48 +433,10 @@ function StepCompare() {
         }))}
         heightClass="h-72"
       />
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="bg-slate-100 text-left text-slate-700">
-              <th className="px-3 py-2">Método</th>
-              <th className="px-3 py-2 text-right">MSE</th>
-              <th className="px-3 py-2 text-right">MAE</th>
-              <th className="px-3 py-2 text-right">MAPE (%)</th>
-              <th className="px-3 py-2 text-right">R²</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => {
-              const isBest = r.fit.metrics.mse === minMse;
-              return (
-                <tr
-                  key={r.name}
-                  className={`border-b border-slate-100 ${
-                    isBest ? 'bg-emerald-50 font-semibold text-emerald-900' : ''
-                  }`}
-                >
-                  <td className="px-3 py-1.5">
-                    {r.name} {isBest && <span className="ml-1 text-emerald-600">★</span>}
-                  </td>
-                  <td className="px-3 py-1.5 text-right font-mono">
-                    {formatNumber(r.fit.metrics.mse, 2)}
-                  </td>
-                  <td className="px-3 py-1.5 text-right font-mono">
-                    {formatNumber(r.fit.metrics.mae, 2)}
-                  </td>
-                  <td className="px-3 py-1.5 text-right font-mono">
-                    {formatNumber(r.fit.metrics.mape, 3)}
-                  </td>
-                  <td className="px-3 py-1.5 text-right font-mono">
-                    {formatNumber(r.fit.metrics.r2, 4)}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      <ExcelSheet
+        rows={compareSheet}
+        ariaLabel="Comparativa de métricas de los cuatro métodos"
+      />
       <p className="text-sm leading-relaxed text-slate-600">
         Newton y Lagrange con 7 puntos centrados en 14:30 son <em>perfectos
         localmente</em>: MSE = 0 porque pasan por los 7 nodos exactos. Pero
@@ -575,7 +556,7 @@ function StepPredict() {
           </span>
           , {result.label} estima una carga de{' '}
           <span className="font-mono text-base font-bold">
-            {formatNumber(result.value, 1)} kW
+            {fmtTrunc5(result.value)} kW
           </span>
           .
         </p>

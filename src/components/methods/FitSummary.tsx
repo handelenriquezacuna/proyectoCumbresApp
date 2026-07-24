@@ -5,8 +5,15 @@ import { fitLeastSquares } from '@/lib/methods/leastSquares';
 import { fitNewton } from '@/lib/methods/newton';
 import type { FitResult, Method } from '@/lib/methods/types';
 import { useCumbresStore } from '@/state/store';
-import { formatNumber } from '@/lib/format';
+import { fmtTrunc5 } from '@/lib/format';
 import { KatexEquation } from '@/components/math/KatexEquation';
+import {
+  EXCEL_COL_HEADER_CLASS,
+  EXCEL_FONT,
+  EXCEL_ROW_HEADER_CLASS,
+  colLetter,
+  excelCellClass,
+} from '@/components/excel/ExcelSheet';
 
 function computeFit(method: Method, degree: number): FitResult {
   if (method === 'newton') return fitNewton(CUMBRES_POINTS);
@@ -17,9 +24,11 @@ function computeFit(method: Method, degree: number): FitResult {
 type CardSpec = { label: string; value: string; hint: string };
 
 /**
- * Bloque resumen del ajuste activo. Muestra el polinomio en LaTeX y un grid
- * de 4 métricas (MSE, MAE, MAPE, R²) con formato regional es-CR. Útil para
- * que el lector contraste numéricamente el método escogido en el playground.
+ * Bloque resumen del ajuste activo. Muestra el polinomio en LaTeX y una
+ * mini-tabla estilo Excel (letras de columna, números de fila, gridlines)
+ * con las 4 métricas (MSE, MAE, MAPE, R²) truncadas a 5 decimales como en
+ * el machote. Útil para que el lector contraste numéricamente el método
+ * escogido en el playground.
  */
 export function FitSummary() {
   const activeMethod = useCumbresStore((s) => s.activeMethod);
@@ -35,22 +44,22 @@ export function FitSummary() {
   const cards: CardSpec[] = [
     {
       label: 'MSE',
-      value: formatNumber(fit.metrics.mse, 2),
+      value: fmtTrunc5(fit.metrics.mse),
       hint: 'Error cuadrático medio',
     },
     {
       label: 'MAE',
-      value: formatNumber(fit.metrics.mae, 2),
+      value: fmtTrunc5(fit.metrics.mae),
       hint: 'Error absoluto medio',
     },
     {
       label: 'MAPE',
-      value: `${formatNumber(fit.metrics.mape, 2)} %`,
+      value: `${fmtTrunc5(fit.metrics.mape)} %`,
       hint: 'Error absoluto medio porcentual',
     },
     {
       label: 'R²',
-      value: formatNumber(fit.metrics.r2, 4),
+      value: fmtTrunc5(fit.metrics.r2),
       hint: 'Coeficiente de determinación',
     },
   ];
@@ -65,21 +74,68 @@ export function FitSummary() {
           <KatexEquation latex={equationLatex} />
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {cards.map((c) => (
-          <div
-            key={c.label}
-            className="rounded-md border border-slate-200 bg-white p-3 text-center shadow-sm"
+      <div>
+        <h4 className="mb-2 text-sm font-semibold text-slate-700">
+          Métricas del ajuste
+        </h4>
+        <div
+          className="overflow-x-auto rounded-md border border-slate-300 bg-white"
+          role="region"
+          aria-label="Métricas del ajuste activo"
+        >
+          <table
+            className="w-full min-w-[24rem] border-separate border-spacing-0 text-sm"
+            style={EXCEL_FONT}
           >
-            <div className="text-xs font-medium uppercase tracking-wide text-slate-500">
-              {c.label}
-            </div>
-            <div className="mt-1 font-mono text-base font-semibold text-slate-900 sm:text-lg">
-              {c.value}
-            </div>
-            <div className="mt-0.5 text-[11px] text-slate-500">{c.hint}</div>
-          </div>
-        ))}
+            <thead>
+              {/* Letras de columna estilo Excel */}
+              <tr>
+                <th scope="col" className={`w-10 ${EXCEL_ROW_HEADER_CLASS}`} aria-label="Fila" />
+                {cards.map((c, i) => (
+                  <th key={c.label} scope="col" className={EXCEL_COL_HEADER_CLASS}>
+                    {colLetter(i)}
+                  </th>
+                ))}
+              </tr>
+              {/* Fila 1: nombres de métrica */}
+              <tr>
+                <th scope="row" className={EXCEL_ROW_HEADER_CLASS}>
+                  1
+                </th>
+                {cards.map((c) => (
+                  <th
+                    key={c.label}
+                    scope="col"
+                    title={c.hint}
+                    className={excelCellClass('header', 'text-center')}
+                  >
+                    {c.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {/* Fila 2: valores calculados */}
+              <tr>
+                <th scope="row" className={EXCEL_ROW_HEADER_CLASS}>
+                  2
+                </th>
+                {cards.map((c) => (
+                  <td
+                    key={c.label}
+                    title={c.hint}
+                    className={excelCellClass('computed', 'text-right tabular-nums')}
+                  >
+                    {c.value}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-1.5 text-[11px] text-slate-500">
+          {cards.map((c) => `${c.label}: ${c.hint}`).join(' · ')}
+        </p>
       </div>
     </div>
   );

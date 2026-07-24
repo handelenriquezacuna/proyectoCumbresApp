@@ -1,12 +1,19 @@
 import type { FitResult, Method, Point } from './types';
 import { gaussSolve } from './linalg';
 import { mae, mape, mse, rSquared } from './errors';
+import { trunc5 } from '@/lib/format';
 
 /**
  * Polynomial least-squares fit of arbitrary degree (1..5).
  *
  * Builds the Vandermonde matrix A (n rows x degree+1 cols), forms the
  * normal equations A^T A a = A^T y and solves them with Gauss elimination.
+ *
+ * Sigue la convención del machote de Excel del curso: cada celda tabulada
+ * (Xi^k y Xi^k·Yi) se trunca a 5 decimales antes de sumarse, el sistema se
+ * resuelve con precisión completa (como la calculadora) y los coeficientes
+ * finales se truncan a 5 decimales; las predicciones usan esos coeficientes
+ * truncados. Así las métricas coinciden con la Hoja de cálculo y el Word.
  *
  * References: Chapra & Canale (2015) ch. 17, Hong & Fan (2016).
  */
@@ -24,50 +31,49 @@ export function fitLeastSquares(points: Point[], degree: number): FitResult {
     );
   }
 
-  // Vandermonde: A[i][j] = x_i^j  (j = 0..degree).
-  const A: number[][] = new Array(n);
+  // Sumas de las columnas del machote: S[e] = Σ TRUNC(x_i^e, 5) para
+  // e = 0..2·degree, y T[e] = Σ TRUNC(x_i^e · y_i, 5) para e = 0..degree.
+  const S = new Array<number>(2 * degree + 1).fill(0);
+  const T = new Array<number>(k).fill(0);
   for (let i = 0; i < n; i++) {
-    const row = new Array<number>(k);
     const xi = points[i]!.x;
+    const yi = points[i]!.y;
     let pow = 1;
-    for (let j = 0; j < k; j++) {
-      row[j] = pow;
+    for (let e = 0; e <= 2 * degree; e++) {
+      S[e] = S[e]! + trunc5(pow);
+      if (e < k) {
+        T[e] = T[e]! + trunc5(pow * yi);
+      }
       pow *= xi;
     }
-    A[i] = row;
   }
 
-  // Normal equations: AtA (k x k), Aty (length k).
+  // Normal equations: AtA[r][c] = S[r+c], Aty[r] = T[r].
   const AtA: number[][] = new Array(k);
-  for (let i = 0; i < k; i++) {
-    AtA[i] = new Array<number>(k).fill(0);
-  }
-  const Aty = new Array<number>(k).fill(0);
-  for (let i = 0; i < n; i++) {
-    const row = A[i]!;
-    const yi = points[i]!.y;
-    for (let r = 0; r < k; r++) {
-      const ar = row[r]!;
-      Aty[r] = Aty[r]! + ar * yi;
-      for (let c = 0; c < k; c++) {
-        AtA[r]![c] = AtA[r]![c]! + ar * row[c]!;
-      }
+  for (let r = 0; r < k; r++) {
+    const row = new Array<number>(k);
+    for (let c = 0; c < k; c++) {
+      row[c] = S[r + c]!;
     }
+    AtA[r] = row;
   }
+  const Aty = T.slice();
 
-  const coeffs = gaussSolve(AtA, Aty);
+  const coeffs = gaussSolve(AtA, Aty).map(trunc5);
 
   const evaluate = (x: number): number => {
-    // Horner: a_0 + x (a_1 + x (a_2 + ...))
-    let acc = coeffs[degree]!;
-    for (let j = degree - 1; j >= 0; j--) {
-      acc = acc * x + coeffs[j]!;
+    // Forma de potencias a_0 + a_1·x + a_2·x² + ... (no Horner): es como
+    // evalúa el machote/canónico y el orden de las operaciones flotantes
+    // cambia el 5º decimal, que aquí debe coincidir dígito a dígito.
+    let acc = 0;
+    for (let j = 0; j <= degree; j++) {
+      acc += coeffs[j]! * Math.pow(x, j);
     }
     return acc;
   };
 
   const actual = points.map((p) => p.y);
-  const predicted = points.map((p) => evaluate(p.x));
+  const predicted = points.map((p) => trunc5(evaluate(p.x)));
 
   let method: Method;
   if (degree === 3) {

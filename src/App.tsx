@@ -7,6 +7,7 @@ import { Conceptos } from '@/sections/02-Conceptos';
 import { Conclusiones } from '@/sections/08-Conclusiones';
 import { Futuro } from '@/sections/07-Futuro';
 import { Hero } from '@/sections/01-Hero';
+import { HojaCalculo } from '@/sections/11-HojaCalculo';
 import { Implementacion } from '@/sections/06-Implementacion';
 import { Metodos } from '@/sections/03-Metodos';
 import { QuizSection } from '@/sections/09-Quiz';
@@ -47,6 +48,7 @@ function App() {
             <Conclusiones />
             <WalkthroughSection />
             <QuizSection />
+            <HojaCalculo />
           </main>
         </div>
       </div>

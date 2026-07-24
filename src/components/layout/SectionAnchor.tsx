@@ -8,7 +8,8 @@ export type CumbresAccent =
   | 'implementacion'
   | 'futuro'
   | 'conclusiones'
-  | 'plan';
+  | 'plan'
+  | 'hoja';
 
 const ACCENT_BORDER: Record<CumbresAccent, string> = {
   conceptos: 'border-l-cumbres-conceptos',
@@ -19,6 +20,7 @@ const ACCENT_BORDER: Record<CumbresAccent, string> = {
   futuro: 'border-l-cumbres-futuro',
   conclusiones: 'border-l-cumbres-conclusiones',
   plan: 'border-l-cumbres-plan',
+  hoja: 'border-l-cumbres-hoja',
 };
 
 export interface SectionAnchorProps

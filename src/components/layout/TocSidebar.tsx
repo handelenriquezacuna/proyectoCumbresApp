@@ -15,6 +15,7 @@ export const DEFAULT_TOC: ReadonlyArray<TocItem> = [
   { id: 'conclusiones', label: 'Conclusiones' },
   { id: 'prueba', label: 'Pruébalo tú mismo' },
   { id: 'quiz', label: 'Quiz' },
+  { id: 'hoja', label: 'Hoja de cálculo' },
 ];
 
 /**

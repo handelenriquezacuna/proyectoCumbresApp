@@ -9,7 +9,8 @@ export type CumbresAccent =
   | 'caso'
   | 'implementacion'
   | 'futuro'
-  | 'conclusiones';
+  | 'conclusiones'
+  | 'hoja';
 
 export interface KatexEquationProps {
   latex: string;
@@ -32,6 +33,7 @@ const ACCENT_BORDER: Record<CumbresAccent, string> = {
   implementacion: 'border-cumbres-implementacion',
   futuro: 'border-cumbres-futuro',
   conclusiones: 'border-cumbres-conclusiones',
+  hoja: 'border-cumbres-hoja',
 };
 
 /**

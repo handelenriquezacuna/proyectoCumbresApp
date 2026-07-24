@@ -16,7 +16,14 @@ import { fitLagrange } from '@/lib/methods/lagrange';
 import { fitLeastSquares } from '@/lib/methods/leastSquares';
 import { fitNewton } from '@/lib/methods/newton';
 import type { FitResult, Method } from '@/lib/methods/types';
-import { formatNumber } from '@/lib/format';
+import { fmtTrunc5, formatNumber } from '@/lib/format';
+import {
+  EXCEL_COL_HEADER_CLASS,
+  EXCEL_FONT,
+  EXCEL_ROW_HEADER_CLASS,
+  colLetter,
+  excelCellClass,
+} from '@/components/excel/ExcelSheet';
 
 type Variant = {
   key: Method;
@@ -152,39 +159,56 @@ export function ErrorComparison() {
   return (
     <div className="flex flex-col gap-6">
       <div
-        className="overflow-x-auto rounded-md border border-slate-200"
+        className="overflow-x-auto rounded-md border border-slate-300 bg-white"
         role="region"
         aria-label="Tabla comparativa de métricas de error"
       >
-        <table className="w-full text-left text-sm">
-          <thead className="bg-slate-100 text-slate-700">
+        <table
+          className="w-full min-w-[34rem] border-separate border-spacing-0 text-sm"
+          style={EXCEL_FONT}
+        >
+          <thead>
+            {/* Letras de columna estilo Excel */}
             <tr>
-              <th scope="col" className="px-3 py-2 font-semibold">
+              <th scope="col" className={`w-10 ${EXCEL_ROW_HEADER_CLASS}`} aria-label="Fila" />
+              {Array.from({ length: 5 }, (_, c) => (
+                <th key={colLetter(c)} scope="col" className={EXCEL_COL_HEADER_CLASS}>
+                  {colLetter(c)}
+                </th>
+              ))}
+            </tr>
+            {/* Fila 1: títulos */}
+            <tr>
+              <th scope="row" className={EXCEL_ROW_HEADER_CLASS}>
+                1
+              </th>
+              <th scope="col" className={excelCellClass('header', 'text-left')}>
                 Método
               </th>
-              <th scope="col" className="px-3 py-2 text-right font-semibold">
+              <th scope="col" className={excelCellClass('header', 'text-right')}>
                 MSE
               </th>
-              <th scope="col" className="px-3 py-2 text-right font-semibold">
+              <th scope="col" className={excelCellClass('header', 'text-right')}>
                 MAE
               </th>
-              <th scope="col" className="px-3 py-2 text-right font-semibold">
+              <th scope="col" className={excelCellClass('header', 'text-right')}>
                 MAPE (%)
               </th>
-              <th scope="col" className="px-3 py-2 text-right font-semibold">
+              <th scope="col" className={excelCellClass('header', 'text-right')}>
                 R²
               </th>
             </tr>
           </thead>
           <tbody>
-            {variants.map((v) => {
+            {variants.map((v, r) => {
               const isBest = v.key === minMseKey;
-              const rowClass = isBest
-                ? 'border-t border-emerald-200 bg-emerald-50 font-semibold text-emerald-900'
-                : 'border-t border-slate-100 odd:bg-white even:bg-slate-50';
+              const numKind = isBest ? ('result' as const) : ('computed' as const);
               return (
-                <tr key={v.key} className={rowClass}>
-                  <td className="px-3 py-2">
+                <tr key={v.key}>
+                  <th scope="row" className={EXCEL_ROW_HEADER_CLASS}>
+                    {r + 2}
+                  </th>
+                  <td className={excelCellClass(isBest ? 'result' : 'label', 'text-left')}>
                     <span
                       className="mr-2 inline-block h-2.5 w-2.5 rounded-full align-middle"
                       style={{ backgroundColor: v.color }}
@@ -192,22 +216,22 @@ export function ErrorComparison() {
                     />
                     {v.label}
                     {isBest && (
-                      <span className="ml-2 rounded bg-emerald-200 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-emerald-900">
+                      <span className="ml-2 rounded bg-yellow-200 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-yellow-900">
                         mejor MSE
                       </span>
                     )}
                   </td>
-                  <td className="px-3 py-2 text-right font-mono">
-                    {formatNumber(v.fit.metrics.mse, 2)}
+                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
+                    {fmtTrunc5(v.fit.metrics.mse)}
                   </td>
-                  <td className="px-3 py-2 text-right font-mono">
-                    {formatNumber(v.fit.metrics.mae, 2)}
+                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
+                    {fmtTrunc5(v.fit.metrics.mae)}
                   </td>
-                  <td className="px-3 py-2 text-right font-mono">
-                    {formatNumber(v.fit.metrics.mape, 2)}
+                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
+                    {fmtTrunc5(v.fit.metrics.mape)}
                   </td>
-                  <td className="px-3 py-2 text-right font-mono">
-                    {formatNumber(v.fit.metrics.r2, 4)}
+                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
+                    {fmtTrunc5(v.fit.metrics.r2)}
                   </td>
                 </tr>
               );

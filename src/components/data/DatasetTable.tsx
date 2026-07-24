@@ -1,14 +1,23 @@
 import { useMemo, useState } from 'react';
 import { CUMBRES_POINTS } from '@/lib/data/cumbresDataset';
-import { formatNumber } from '@/lib/format';
+import { fmtTrunc5 } from '@/lib/format';
+import {
+  EXCEL_COL_HEADER_CLASS,
+  EXCEL_FONT,
+  EXCEL_ROW_HEADER_CLASS,
+  colLetter,
+  excelCellClass,
+} from '@/components/excel/ExcelSheet';
 
 type SortKey = 'x' | 'y';
 type SortDir = 'asc' | 'desc';
 
 /**
- * Tabla compacta y ordenable de la serie horaria del Cumbres Data Center.
- * Diseñada para vivir dentro de un Card; en pantallas pequeñas se desplaza
- * verticalmente para no romper el layout.
+ * Tabla compacta y ordenable de la serie horaria del Cumbres Data Center,
+ * presentada como hoja de Excel del machote: letras de columna, números de
+ * fila, gridlines finas y datos duros en azul (convención contable). Conserva
+ * el ordenamiento por columna; en pantallas pequeñas se desplaza vertical y
+ * horizontalmente para no romper el layout.
  */
 export function DatasetTable() {
   const [sortKey, setSortKey] = useState<SortKey>('x');
@@ -38,14 +47,38 @@ export function DatasetTable() {
 
   return (
     <div
-      className="max-h-72 overflow-y-auto rounded-md border border-slate-200"
+      className="max-h-72 overflow-x-auto overflow-y-auto rounded-md border border-slate-300 bg-white"
       role="region"
       aria-label="Tabla de demanda eléctrica horaria"
     >
-      <table className="w-full text-left text-sm">
-        <thead className="sticky top-0 bg-slate-100 text-slate-700">
+      <table
+        className="w-full border-separate border-spacing-0 text-sm"
+        style={EXCEL_FONT}
+      >
+        <thead>
+          {/* Letras de columna estilo Excel */}
           <tr>
-            <th scope="col" className="px-3 py-2 font-semibold">
+            <th
+              scope="col"
+              className={`sticky left-0 top-0 z-20 w-10 ${EXCEL_ROW_HEADER_CLASS}`}
+              aria-label="Fila"
+            />
+            <th scope="col" className={`sticky top-0 z-10 ${EXCEL_COL_HEADER_CLASS}`}>
+              {colLetter(0)}
+            </th>
+            <th scope="col" className={`sticky top-0 z-10 ${EXCEL_COL_HEADER_CLASS}`}>
+              {colLetter(1)}
+            </th>
+          </tr>
+          {/* Fila 1: títulos con ordenamiento */}
+          <tr>
+            <th scope="row" className={`sticky left-0 top-[25px] z-20 ${EXCEL_ROW_HEADER_CLASS}`}>
+              1
+            </th>
+            <th
+              scope="col"
+              className={`sticky top-[25px] z-10 ${excelCellClass('header', 'text-left')}`}
+            >
               <button
                 type="button"
                 onClick={() => toggle('x')}
@@ -57,7 +90,10 @@ export function DatasetTable() {
                 Hora{indicator('x')}
               </button>
             </th>
-            <th scope="col" className="px-3 py-2 text-right font-semibold">
+            <th
+              scope="col"
+              className={`sticky top-[25px] z-10 ${excelCellClass('header', 'text-right')}`}
+            >
               <button
                 type="button"
                 onClick={() => toggle('y')}
@@ -72,16 +108,16 @@ export function DatasetTable() {
           </tr>
         </thead>
         <tbody>
-          {rows.map((p) => (
-            <tr
-              key={p.x}
-              className="border-t border-slate-100 odd:bg-white even:bg-slate-50"
-            >
-              <td className="px-3 py-1.5 font-mono text-slate-800">
+          {rows.map((p, r) => (
+            <tr key={p.x}>
+              <th scope="row" className={`sticky left-0 z-10 ${EXCEL_ROW_HEADER_CLASS}`}>
+                {r + 2}
+              </th>
+              <td className={excelCellClass('input', 'text-right tabular-nums')}>
                 {String(p.x).padStart(2, '0')}:00
               </td>
-              <td className="px-3 py-1.5 text-right font-mono text-slate-800">
-                {formatNumber(p.y, 0)}
+              <td className={excelCellClass('input', 'text-right tabular-nums')}>
+                {fmtTrunc5(p.y)}
               </td>
             </tr>
           ))}
