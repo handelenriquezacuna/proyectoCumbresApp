@@ -66,7 +66,7 @@ export function Conclusiones() {
             ajuste con MAPE y R² antes de su despliegue en el BMS, y
             documentar la versión del modelo y sus métricas en un registro
             auditable. La revisión trimestral debe contrastar el modelo
-            numérico con un benchmark de LSTM una vez se acumulen al menos
+            numérico con una referencia comparativa de LSTM una vez se acumulen al menos
             seis meses de datos (Hong y Fan, 2016; Mora Flores, 2022).
           </p>
         </li>

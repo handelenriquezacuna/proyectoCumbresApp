@@ -130,16 +130,16 @@ export type BuildCumbresReportOptions = {
   metrics: FitResult['metrics'];
   /** LaTeX del polinomio ajustado (P(x) = ...). Se serializa a texto plano. */
   polynomialLatex: string;
-  /** Opcional: gráfica del playground en formato data URL (image/png). */
+  /** Opcional: gráfica del simulador en formato data URL (image/png). */
   chartPngDataUrl?: string;
 };
 
 /**
  * Construye el reporte PDF del caso Cumbres. La estructura es:
  *  1. Encabezado institucional (universidad + curso)
- *  2. Tabla del dataset (24 filas)
+ *  2. Tabla de datos horarios (24 filas)
  *  3. Bloque "Método activo" (etiqueta + ecuación textual)
- *  4. Imagen del playground (si se proporciona)
+ *  4. Imagen del simulador (si se proporciona)
  *  5. Métricas en grid 4x1
  *  6. Conclusión narrativa
  */
@@ -170,7 +170,7 @@ export function buildCumbresReport(
       )} · Generado ${today}`,
       style: 'meta',
     },
-    { text: 'Dataset horario (24 puntos)', style: 'h2' },
+    { text: 'Datos horarios (24 puntos)', style: 'h2' },
     {
       text: `Día tipo: ${DATASET_METADATA.dayType}. Valle ${DATASET_METADATA.valleyKw} kW, pico ${DATASET_METADATA.pickKw} kW. Calibrado con Uptime Institute (2024) y ASHRAE Thermal Guidelines 5.ª ed. (2021).`,
       style: 'p',

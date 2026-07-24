@@ -27,6 +27,15 @@ export interface SectionAnchorProps
   extends Omit<HTMLAttributes<HTMLElement>, 'id'> {
   id: string;
   accent?: CumbresAccent;
+  /**
+   * Si true, el contenido interno usa `content-visibility: auto` (clase
+   * `.cv-auto`) para diferir su render mientras la sección está lejos del
+   * viewport. La clase se aplica a un div interno — no al `<section id=…>` —
+   * para que el IntersectionObserver del TOC y los anclajes sigan observando
+   * una caja normal. Pensado para secciones bajo el fold (capítulos 2+ y
+   * anexo).
+   */
+  deferOffscreen?: boolean;
   children: ReactNode;
 }
 
@@ -34,6 +43,7 @@ export function SectionAnchor({
   id,
   accent,
   className,
+  deferOffscreen = false,
   children,
   ...rest
 }: SectionAnchorProps) {
@@ -48,7 +58,7 @@ export function SectionAnchor({
 
   return (
     <section id={id} className={classes} {...rest}>
-      {children}
+      {deferOffscreen ? <div className="cv-auto">{children}</div> : children}
     </section>
   );
 }

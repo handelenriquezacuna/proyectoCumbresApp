@@ -207,12 +207,14 @@ export function TocSidebar({
           {prev ? (
             <a
               href={`#${prev.id}`}
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-flex min-h-10 items-center rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               ← Anterior
             </a>
           ) : (
-            <span className="px-3 py-1.5 text-sm text-slate-300">← Anterior</span>
+            <span className="inline-flex min-h-10 items-center px-3 py-1.5 text-sm text-slate-300">
+              ← Anterior
+            </span>
           )}
           <span className="truncate text-xs font-semibold uppercase tracking-wide text-slate-600">
             {indicator}
@@ -220,12 +222,14 @@ export function TocSidebar({
           {next ? (
             <a
               href={`#${next.id}`}
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="inline-flex min-h-10 items-center rounded-md px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
             >
               Siguiente →
             </a>
           ) : (
-            <span className="px-3 py-1.5 text-sm text-slate-300">Siguiente →</span>
+            <span className="inline-flex min-h-10 items-center px-3 py-1.5 text-sm text-slate-300">
+              Siguiente →
+            </span>
           )}
         </div>
       </nav>

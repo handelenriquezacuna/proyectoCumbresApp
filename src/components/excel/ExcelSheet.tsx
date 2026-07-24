@@ -1,5 +1,6 @@
 import { useMemo, useState, type KeyboardEvent } from 'react';
 import { fmtTrunc5 } from '@/lib/format';
+import { TableScrollHint } from '@/components/ui/TableScrollHint';
 
 /**
  * Tipos de celda calcados del machote de Excel del curso:
@@ -155,7 +156,7 @@ export function ExcelSheet({
 
   const barContent =
     selectedCell === null
-      ? 'Hacé clic en una celda para ver su fórmula'
+      ? 'Haz clic en una celda para ver su fórmula'
       : (selectedCell.formula ?? displayValue(selectedCell));
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTableCellElement>, r: number, c: number): void => {
@@ -174,6 +175,7 @@ export function ExcelSheet({
 
   return (
     <div className={['w-full', className ?? ''].filter(Boolean).join(' ')}>
+      <TableScrollHint />
       {/* Barra de fórmulas, como en Excel: caja de nombre | fx | fórmula */}
       <div
         className="flex items-stretch rounded-t-md border border-slate-300 bg-white text-sm"

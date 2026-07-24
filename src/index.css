@@ -6,8 +6,27 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Respeta la preferencia del usuario de reducir el movimiento:
+   sin desplazamiento animado ni transiciones no esenciales. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
 body {
   font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: #0f172a;
   background-color: #f8fafc;
+}
+
+/* Rendimiento: difiere el render del contenido bajo el fold hasta que se
+   acerca al viewport. `contain-intrinsic-size: auto 900px` reserva una altura
+   estimada mientras no está renderizado (y recuerda la altura real después
+   del primer render) para que el scroll y los anclajes no salten. Se aplica
+   al contenido interno de cada sección — nunca al elemento con id — para no
+   interferir con el IntersectionObserver del TOC (useActiveSection). */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
 }

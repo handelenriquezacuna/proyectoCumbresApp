@@ -13,7 +13,7 @@ export interface QuestionProps {
 }
 
 /**
- * Pregunta de selección única para el quiz de repaso. Implementa un
+ * Pregunta de selección única para la autoevaluación. Implementa un
  * grupo de radios accesible (rol `radiogroup`) con navegación por teclado:
  * flechas ↑/↓/←/→ mueven el foco entre opciones, Espacio/Enter selecciona.
  * Una vez respondida la pregunta, las opciones se resaltan en verde (correcta)

@@ -20,7 +20,7 @@ function computeFit(method: Method, degree: number): FitResult {
  * `prediccion_metodo_activo` (valor del polinomio ajustado en esa hora).
  *
  * Toma el método activo y el grado del polinomio del store de zustand para
- * que el archivo refleje exactamente el ajuste visible en el playground.
+ * que el archivo refleje exactamente el ajuste visible en el simulador.
  *
  * Mantiene un estado `pending` para deshabilitar el botón mientras se
  * construye el archivo (aunque la generación es síncrona, esto garantiza
@@ -53,7 +53,7 @@ export function CsvDownloadButton() {
       variant="ghost"
       onClick={handleClick}
       disabled={pending}
-      aria-label="Descargar dataset y predicción en CSV"
+      aria-label="Descargar datos y predicción en CSV"
     >
       {pending ? 'Generando…' : 'Descargar CSV'}
     </Button>

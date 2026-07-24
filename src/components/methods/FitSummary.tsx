@@ -14,6 +14,7 @@ import {
   colLetter,
   excelCellClass,
 } from '@/components/excel/ExcelSheet';
+import { TableScrollHint } from '@/components/ui/TableScrollHint';
 
 function computeFit(method: Method, degree: number): FitResult {
   if (method === 'newton') return fitNewton(CUMBRES_POINTS);
@@ -28,7 +29,7 @@ type CardSpec = { label: string; value: string; hint: string };
  * mini-tabla estilo Excel (letras de columna, números de fila, gridlines)
  * con las 4 métricas (MSE, MAE, MAPE, R²) truncadas a 5 decimales como en
  * el machote. Útil para que el lector contraste numéricamente el método
- * escogido en el playground.
+ * escogido en el simulador.
  */
 export function FitSummary() {
   const activeMethod = useCumbresStore((s) => s.activeMethod);
@@ -78,6 +79,7 @@ export function FitSummary() {
         <h4 className="mb-2 text-sm font-semibold text-slate-700">
           Métricas del ajuste
         </h4>
+        <TableScrollHint />
         <div
           className="overflow-x-auto rounded-md border border-slate-300 bg-white"
           role="region"

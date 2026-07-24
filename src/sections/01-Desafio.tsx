@@ -31,7 +31,7 @@ export function Desafio() {
           ¿Cuánta energía necesitará Cumbres a las 14:30?
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-base leading-relaxed text-slate-200 sm:text-lg">
-          Cumbres es un data center Tier III ubicado ficticiamente en Belén,
+          Cumbres es un centro de datos Tier III ubicado ficticiamente en Belén,
           Heredia. Durante un día se registró su demanda eléctrica una vez por
           hora, pero el equipo de operación necesita conocer la carga estimada
           a las 14:30 para planificar los recursos de enfriamiento. El problema

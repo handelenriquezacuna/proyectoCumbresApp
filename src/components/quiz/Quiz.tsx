@@ -9,7 +9,7 @@ export interface QuizItem {
 }
 
 /**
- * Banco oficial de preguntas del quiz de repaso del informe Cumbres.
+ * Banco oficial de preguntas de la autoevaluación del informe Cumbres.
  * Cinco ítems de selección única que cubren los métodos numéricos y
  * los indicadores energéticos discutidos en los capítulos previos.
  */
@@ -63,7 +63,7 @@ export const QUIZ_QUESTIONS: ReadonlyArray<QuizItem> = [
 ];
 
 /**
- * Compone las cinco preguntas del quiz y, una vez respondidas todas,
+ * Compone las cinco preguntas de la autoevaluación y, una vez respondidas todas,
  * muestra el panel de resultado con el puntaje y el botón de reinicio.
  */
 export function Quiz() {

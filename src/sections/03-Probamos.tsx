@@ -69,6 +69,7 @@ function SubProblema() {
         fits={[]}
         highlightX={TARGET_HOUR}
         highlightY={TARGET_TRUTH_KW}
+        ariaLabel="Gráfica con las 24 mediciones observadas de carga en kilovatios y un punto amarillo en la hora 14.5, el instante sin medición que se desea estimar"
       />
       <p className="text-sm italic text-slate-500">
         El punto amarillo marca el instante que queremos estimar. No tenemos
@@ -114,6 +115,7 @@ function SubLineaRecta() {
         fits={[{ name: 'Interpolación lineal', color: '#0ea5e9', data: lineSeries }]}
         highlightX={TARGET_HOUR}
         highlightY={estimate}
+        ariaLabel="Gráfica que compara las mediciones observadas en kilovatios con la recta estimada entre las 14:00 y las 15:00; el punto amarillo marca la estimación a las 14:30"
       />
       <div className="rounded-md border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
         <p className="font-semibold">Resultado lineal a las 14:30</p>
@@ -125,7 +127,7 @@ function SubLineaRecta() {
       </div>
       <p className="text-sm leading-relaxed text-slate-600">
         Funciona, pero tiene una limitación: asume que entre cada hora la
-        carga cambia linealmente. En la realidad los data centers tienen
+        carga cambia linealmente. En la realidad los centros de datos tienen
         rampas suaves con curvatura. Necesitamos algo que respete la{' '}
         <em>forma</em> de la curva, no solo los extremos.
       </p>
@@ -191,6 +193,7 @@ function SubNewton() {
         ]}
         highlightX={TARGET_HOUR}
         highlightY={estimate}
+        ariaLabel="Gráfica que compara las mediciones observadas en kilovatios con la curva estimada por Newton usando los puntos vecinos elegidos; el punto amarillo marca la estimación a las 14:30"
       />
       <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-900">
         <p className="font-semibold">Estimación a las 14:30</p>
@@ -285,6 +288,7 @@ function SubLagrange() {
         ]}
         highlightX={TARGET_HOUR}
         highlightY={newton.evaluate(TARGET_HOUR)}
+        ariaLabel="Gráfica que compara las curvas estimadas por Newton y Lagrange, superpuestas por ser el mismo polinomio, con las mediciones observadas en kilovatios"
       />
       <p className="text-sm leading-relaxed text-slate-600">
         Las dos curvas se superponen perfectamente. En la hoja de cálculo del
@@ -312,7 +316,7 @@ function SubLagrange() {
  */
 export function Probamos() {
   return (
-    <SectionAnchor id="probamos" accent="metodos">
+    <SectionAnchor id="probamos" accent="metodos" deferOffscreen>
       <header className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-metodos">
           Capítulo 3 de 6

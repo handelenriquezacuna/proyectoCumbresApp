@@ -9,7 +9,7 @@ export interface QuizResultProps {
 }
 
 /**
- * Panel resumen del quiz. Muestra el puntaje en formato "X / N",
+ * Panel resumen de la autoevaluación. Muestra el puntaje en formato "X / N",
  * un mensaje cualitativo según el desempeño y un botón para reiniciar
  * (limpia las respuestas en el store de Zustand).
  */
@@ -36,7 +36,7 @@ export function QuizResult({ score, total }: QuizResultProps) {
   return (
     <section
       role="region"
-      aria-label="Resultado del quiz"
+      aria-label="Resultado de la autoevaluación"
       className={[
         'rounded-lg border p-4 shadow-sm sm:p-6',
         band.tone,
@@ -50,8 +50,12 @@ export function QuizResult({ score, total }: QuizResultProps) {
       <p className="mt-2 text-sm leading-relaxed sm:text-base">{band.label}</p>
 
       <div className="mt-4">
-        <Button variant="ghost" onClick={resetQuiz} aria-label="Reiniciar quiz">
-          Reiniciar quiz
+        <Button
+          variant="ghost"
+          onClick={resetQuiz}
+          aria-label="Reiniciar autoevaluación"
+        >
+          Reiniciar autoevaluación
         </Button>
       </div>
     </section>

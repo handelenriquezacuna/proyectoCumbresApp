@@ -24,6 +24,7 @@ import {
   colLetter,
   excelCellClass,
 } from '@/components/excel/ExcelSheet';
+import { TableScrollHint } from '@/components/ui/TableScrollHint';
 
 type Variant = {
   key: Method;
@@ -150,6 +151,8 @@ export function ErrorComparison() {
 
   return (
     <div className="flex flex-col gap-6">
+      <div>
+      <TableScrollHint />
       <div
         className="overflow-x-auto rounded-md border border-slate-300 bg-white"
         role="region"
@@ -231,6 +234,7 @@ export function ErrorComparison() {
           </tbody>
         </table>
       </div>
+      </div>
 
       <div className="rounded-md border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600">
         <p>
@@ -247,7 +251,17 @@ export function ErrorComparison() {
         </p>
       </div>
 
-      <div className="h-96 w-full" aria-label="Curvas ajustadas comparadas">
+      <div>
+      <p className="mb-1 text-sm text-slate-600">
+        Lectura clave: las cuatro curvas estimadas frente a los 24 puntos
+        observados (en kW); mínimos cuadrados de grado 5 sigue la forma del
+        día sin las oscilaciones de Newton y Lagrange en los extremos.
+      </p>
+      <div
+        className="h-96 w-full"
+        role="img"
+        aria-label="Gráfica que compara las curvas estimadas por Newton, Lagrange y mínimos cuadrados de grados 3 y 5 con los 24 puntos observados de carga en kilovatios por hora del día"
+      >
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart margin={{ top: 8, right: 16, left: 8, bottom: 24 }}>
             <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
@@ -282,7 +296,7 @@ export function ErrorComparison() {
               data={sampleRows}
               type="monotone"
               dataKey="newton"
-              name="Newton"
+              name="Newton (estimado)"
               stroke={variants[0]!.color}
               strokeWidth={2}
               dot={false}
@@ -292,7 +306,7 @@ export function ErrorComparison() {
               data={sampleRows}
               type="monotone"
               dataKey="lagrange"
-              name="Lagrange"
+              name="Lagrange (estimado)"
               stroke={variants[1]!.color}
               strokeWidth={2}
               strokeDasharray="6 3"
@@ -303,7 +317,7 @@ export function ErrorComparison() {
               data={sampleRows}
               type="monotone"
               dataKey="ls3"
-              name="MMC grado 3"
+              name="MMC grado 3 (estimado)"
               stroke={variants[2]!.color}
               strokeWidth={2}
               dot={false}
@@ -313,7 +327,7 @@ export function ErrorComparison() {
               data={sampleRows}
               type="monotone"
               dataKey="ls5"
-              name="MMC grado 5"
+              name="MMC grado 5 (estimado)"
               stroke={variants[3]!.color}
               strokeWidth={2}
               dot={false}
@@ -328,6 +342,7 @@ export function ErrorComparison() {
             />
           </ComposedChart>
         </ResponsiveContainer>
+      </div>
       </div>
     </div>
   );

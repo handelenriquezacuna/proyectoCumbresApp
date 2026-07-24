@@ -88,8 +88,13 @@ export function DatasetChart({
   const data: Datum[] = CUMBRES_POINTS.map((p) => ({ x: p.x, y: p.y }));
 
   return (
-    <div className="h-72 w-full" aria-label="Gráfica de demanda horaria">
-      <ResponsiveContainer width="100%" height="100%">
+    <div>
+      <div
+        className="h-72 w-full"
+        role="img"
+        aria-label="Gráfica de línea con las 24 mediciones observadas de demanda eléctrica en kilovatios por hora del día"
+      >
+        <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}
           margin={{ top: 8, right: 16, left: 8, bottom: 8 }}
@@ -139,7 +144,12 @@ export function DatasetChart({
             isAnimationActive={false}
           />
         </LineChart>
-      </ResponsiveContainer>
+        </ResponsiveContainer>
+      </div>
+      <p className="mt-2 text-sm text-slate-600">
+        Lectura clave: la demanda observada se mueve entre ~1240 kW en la
+        madrugada y un pico de ~1500 kW a media tarde.
+      </p>
     </div>
   );
 }

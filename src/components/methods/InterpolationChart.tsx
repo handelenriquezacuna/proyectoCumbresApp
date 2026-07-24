@@ -127,11 +127,13 @@ export function InterpolationChart({
   const seriesLabel = methodLabel(activeMethod, polynomialDegree);
 
   return (
-    <div
-      className="h-80 w-full"
-      aria-label={`Curva ajustada — ${seriesLabel}`}
-    >
-      <ResponsiveContainer width="100%" height="100%">
+    <div>
+      <div
+        className="h-80 w-full"
+        role="img"
+        aria-label={`Gráfica que compara los 24 puntos observados de carga en kilovatios con la curva estimada por ${seriesLabel}`}
+      >
+        <ResponsiveContainer width="100%" height="100%">
         <ComposedChart margin={{ top: 8, right: 16, left: 8, bottom: 24 }}>
           <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
           <XAxis
@@ -165,7 +167,7 @@ export function InterpolationChart({
             data={fittedData}
             type="monotone"
             dataKey="fitted"
-            name={seriesLabel}
+            name={`${seriesLabel} (estimado)`}
             stroke="#2563eb"
             strokeWidth={2}
             dot={false}
@@ -190,7 +192,15 @@ export function InterpolationChart({
             />
           )}
         </ComposedChart>
-      </ResponsiveContainer>
+        </ResponsiveContainer>
+      </div>
+      <p className="mt-2 text-sm text-slate-600">
+        Lectura clave: la línea azul es la carga estimada por {seriesLabel}{' '}
+        (en kW) y los puntos rojos son las 24 mediciones observadas
+        {highlightX !== undefined
+          ? '; el punto amarillo marca la hora consultada.'
+          : '.'}
+      </p>
     </div>
   );
 }

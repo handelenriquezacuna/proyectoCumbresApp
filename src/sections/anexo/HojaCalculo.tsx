@@ -87,7 +87,7 @@ function ComoLeerCard() {
           truncado, igual que en Excel.
         </li>
         <li>
-          Hacé clic en cualquier celda calculada para ver su fórmula en la barra <em>fx</em>, como
+          Haz clic en cualquier celda calculada para ver su fórmula en la barra <em>fx</em>, como
           en Excel.
         </li>
       </ol>
@@ -389,7 +389,7 @@ function ErroresTab() {
           <ul className="list-disc space-y-1 pl-4">
             <li>
               Se comparan las horas 13–15 porque son la zona del pico de demanda, la más crítica
-              para operar el data center: ahí un error cuesta más.
+              para operar el centro de datos: ahí un error cuesta más.
             </li>
             <li>
               El bloque Newton vs Lagrange no mide calidad sino unicidad: dos métodos distintos
@@ -460,8 +460,8 @@ export function HojaCalculo() {
 
       <p className="mb-4 text-base leading-relaxed text-slate-700">
         Esta sección replica el machote de Excel del curso celda por celda, con los mismos números y
-        la misma disposición — así podés explicar de dónde sale cada número durante la presentación.
-        Si nunca has visto el machote, empezá por esta guía:
+        la misma disposición — así puedes explicar de dónde sale cada número durante la presentación.
+        Si nunca has visto el machote, empieza por esta guía:
       </p>
 
       <ComoLeerCard />

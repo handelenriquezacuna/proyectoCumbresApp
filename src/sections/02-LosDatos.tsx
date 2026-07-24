@@ -5,7 +5,7 @@ import { KatexEquation } from '@/components/math/KatexEquation';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
 
 const FICHA: ReadonlyArray<{ label: string; value: string }> = [
-  { label: 'Instalación', value: 'Data center Tier III ficticio' },
+  { label: 'Instalación', value: 'Centro de datos Tier III ficticio' },
   { label: 'Ubicación', value: 'Belén, Heredia' },
   { label: 'Información disponible', value: '24 mediciones horarias' },
   { label: 'Objetivo', value: 'Estimar la demanda entre horas no medidas' },
@@ -20,7 +20,7 @@ const FICHA: ReadonlyArray<{ label: string; value: string }> = [
  */
 export function LosDatos() {
   return (
-    <SectionAnchor id="datos" accent="caso">
+    <SectionAnchor id="datos" accent="caso" deferOffscreen>
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-caso">
           Capítulo 2 de 6
@@ -86,7 +86,7 @@ export function LosDatos() {
             categoría en América Latina. Con 1500 kW de pico vespertino,
             1240 kW de base nocturna y un PUE de 1.55, la instalación
             reproduce el perfil térmico descrito por Avelar et al. (2012)
-            para data centers de gama media en clima tropical de altura.
+            para centros de datos de gama media en clima tropical de altura.
           </p>
 
           <p className="mb-4 text-base leading-relaxed text-slate-700">
@@ -108,7 +108,7 @@ export function LosDatos() {
           />
 
           <p className="mt-4 text-base leading-relaxed text-slate-700">
-            El dataset de trabajo contiene 24 observaciones horarias (h, kW)
+            El conjunto de datos de trabajo contiene 24 observaciones horarias (h, kW)
             correspondientes a un martes laboral típico, presentadas arriba en
             formato listo para el análisis numérico.
           </p>

@@ -99,7 +99,9 @@ export function Tabs({
               onClick={() => selectIndex(i, false)}
               onKeyDown={(e) => handleKeyDown(e, i)}
               className={
-                'rounded-t-md px-3 py-2 text-sm font-medium transition-colors ' +
+                // min-h-10 garantiza un objetivo táctil de al menos 40px en
+                // móvil; en pantallas sm+ se restablece el alto original.
+                'min-h-10 rounded-t-md px-3 py-2 text-sm font-medium transition-colors sm:min-h-0 ' +
                 'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ' +
                 'focus-visible:ring-offset-2 focus-visible:ring-offset-white ' +
                 (selected

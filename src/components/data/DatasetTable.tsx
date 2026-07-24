@@ -8,6 +8,7 @@ import {
   colLetter,
   excelCellClass,
 } from '@/components/excel/ExcelSheet';
+import { TableScrollHint } from '@/components/ui/TableScrollHint';
 
 type SortKey = 'x' | 'y';
 type SortDir = 'asc' | 'desc';
@@ -50,6 +51,7 @@ export function DatasetTable() {
       <p className="mb-2 text-sm text-slate-600">
         Los números azules son las 24 mediciones horarias del caso (un martes laboral típico).
       </p>
+      <TableScrollHint />
       <div
         className="max-h-72 overflow-x-auto overflow-y-auto rounded-md border border-slate-300 bg-white"
         role="region"
@@ -83,7 +85,7 @@ export function DatasetTable() {
                 <button
                   type="button"
                   onClick={() => toggle('x')}
-                  className="w-full text-left focus:outline-none focus-visible:underline"
+                  className="flex min-h-10 w-full items-center text-left focus:outline-none focus-visible:underline sm:min-h-0"
                   aria-label={`Ordenar por hora (${sortKey === 'x' ? sortDir : 'sin orden'})`}
                 >
                   Hora{indicator('x')}
@@ -96,7 +98,7 @@ export function DatasetTable() {
                 <button
                   type="button"
                   onClick={() => toggle('y')}
-                  className="w-full text-right focus:outline-none focus-visible:underline"
+                  className="flex min-h-10 w-full items-center justify-end text-right focus:outline-none focus-visible:underline sm:min-h-0"
                   aria-label={`Ordenar por carga (${sortKey === 'y' ? sortDir : 'sin orden'})`}
                 >
                   Carga (kW){indicator('y')}

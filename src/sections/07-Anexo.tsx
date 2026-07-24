@@ -1,13 +1,30 @@
-import { useEffect, useState, type ReactNode, type SyntheticEvent } from 'react';
+import {
+  Suspense,
+  lazy,
+  useEffect,
+  useState,
+  type ReactNode,
+  type SyntheticEvent,
+} from 'react';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
-import { Aplicaciones } from '@/sections/anexo/Aplicaciones';
-import { Conceptos } from '@/sections/anexo/Conceptos';
-import { Conclusiones } from '@/sections/anexo/Conclusiones';
-import { Futuro } from '@/sections/anexo/Futuro';
-import { HojaCalculo } from '@/sections/anexo/HojaCalculo';
-import { Implementacion } from '@/sections/anexo/Implementacion';
-import { Metodos } from '@/sections/anexo/Metodos';
-import { QuizSection } from '@/sections/anexo/Quiz';
+
+// Carga diferida del material académico: cada sección del anexo se compila en
+// su propio chunk y se descarga recién cuando el usuario expande la tarjeta
+// (el contenido ya se montaba al abrir). Así el bundle inicial solo carga la
+// historia principal.
+const Aplicaciones = lazy(() => import('@/sections/anexo/Aplicaciones'));
+const Conceptos = lazy(() => import('@/sections/anexo/Conceptos'));
+const Conclusiones = lazy(() => import('@/sections/anexo/Conclusiones'));
+const Futuro = lazy(() => import('@/sections/anexo/Futuro'));
+const HojaCalculo = lazy(() => import('@/sections/anexo/HojaCalculo'));
+const Implementacion = lazy(() => import('@/sections/anexo/Implementacion'));
+const Metodos = lazy(() => import('@/sections/anexo/Metodos'));
+const QuizSection = lazy(() => import('@/sections/anexo/Quiz'));
+
+/** Fallback discreto mientras se descarga el chunk de una tarjeta. */
+function CardFallback() {
+  return <p className="py-6 text-sm italic text-slate-400">Cargando…</p>;
+}
 
 type AnnexItem = {
   /** id del ancla histórica que vive dentro del contenido (#conceptos, …). */
@@ -33,7 +50,7 @@ const ANNEX_ITEMS: ReadonlyArray<AnnexItem> = [
   },
   {
     id: 'aplicaciones',
-    title: 'Aplicaciones en data centers',
+    title: 'Aplicaciones en centros de datos',
     description: 'Pronóstico horario, HVAC, tarifa T-MT y detección de picos.',
     render: () => <Aplicaciones />,
   },
@@ -89,11 +106,16 @@ export function Anexo() {
       if (!ANNEX_ITEMS.some((item) => item.id === hash)) return;
       setOpenMap((prev) => ({ ...prev, [hash]: true }));
       // El contenido se monta al abrir; esperamos un frame antes de
-      // desplazar la tarjeta (siempre montada) a la vista.
+      // desplazar la tarjeta (siempre montada) a la vista. El desplazamiento
+      // animado se desactiva si el usuario prefiere reducir el movimiento.
+      const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
       window.setTimeout(() => {
-        document
-          .getElementById(cardDomId(hash))
-          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById(cardDomId(hash))?.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start',
+        });
       }, 60);
     };
 
@@ -110,7 +132,7 @@ export function Anexo() {
     };
 
   return (
-    <SectionAnchor id="anexo" accent="hoja">
+    <SectionAnchor id="anexo" accent="hoja" deferOffscreen>
       <header className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-hoja">
           Anexo académico
@@ -153,7 +175,9 @@ export function Anexo() {
                 </span>
               </summary>
               <div className="border-t border-slate-200 px-4 pb-4 sm:px-6">
-                {isOpen && item.render()}
+                {isOpen && (
+                  <Suspense fallback={<CardFallback />}>{item.render()}</Suspense>
+                )}
               </div>
             </details>
           );

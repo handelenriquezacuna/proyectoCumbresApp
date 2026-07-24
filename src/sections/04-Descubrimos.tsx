@@ -43,7 +43,9 @@ function RungeExperiment() {
       aria-pressed={active}
       onClick={onClick}
       className={
-        'rounded-md px-3 py-1.5 text-sm font-medium transition-colors ' +
+        // min-h-10 asegura un objetivo táctil ≥40px en móvil; en sm+ vuelve
+        // al alto compacto original.
+        'inline-flex min-h-10 items-center rounded-md px-3 py-1.5 text-sm font-medium transition-colors sm:min-h-0 ' +
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 ' +
         (active
           ? 'bg-amber-600 text-white shadow-sm'
@@ -71,6 +73,11 @@ function RungeExperiment() {
       <div className="mt-3">
         <MiniChart
           observed={observed}
+          ariaLabel={
+            useAll
+              ? 'Gráfica que compara las mediciones observadas en kilovatios con la curva estimada por Newton sobre los 24 puntos, que oscila en los extremos del día'
+              : 'Gráfica que compara las mediciones observadas en kilovatios con la curva estimada por Newton sobre 5 puntos vecinos, suave alrededor de las 14:30'
+          }
           fits={
             useAll
               ? [
@@ -175,6 +182,7 @@ function LeastSquaresRescue() {
           ]}
           highlightX={TARGET_HOUR}
           highlightY={fit.evaluate(TARGET_HOUR)}
+          ariaLabel={`Gráfica que compara las mediciones observadas en kilovatios con la curva estimada por mínimos cuadrados de grado ${degree}; el punto amarillo marca la estimación a las 14:30`}
         />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {(['mse', 'mae', 'mape', 'r2'] as const).map((k) => (
@@ -191,7 +199,7 @@ function LeastSquaresRescue() {
         </div>
         <p className="text-sm leading-relaxed text-slate-600">
           A más grado, mejor ajuste — pero con rendimientos decrecientes. Para
-          este dataset, <strong>grado 3</strong> ya captura la forma diurna;
+          este conjunto de datos, <strong>grado 3</strong> ya captura la forma diurna;
           los grados 4 y 5 mejoran R² marginalmente.
         </p>
       </div>
@@ -212,7 +220,7 @@ function LeastSquaresRescue() {
  */
 export function Descubrimos() {
   return (
-    <SectionAnchor id="descubrimos" accent="implementacion">
+    <SectionAnchor id="descubrimos" accent="implementacion" deferOffscreen>
       <header className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-implementacion">
           Capítulo 4 de 6

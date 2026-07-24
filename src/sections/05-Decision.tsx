@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/Card';
 import { ErrorComparison } from '@/components/compare/ErrorComparison';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
+import { TableScrollHint } from '@/components/ui/TableScrollHint';
 
 type DecisionRow = {
   need: string;
@@ -39,7 +40,7 @@ const DECISION_ROWS: ReadonlyArray<DecisionRow> = [
  */
 export function Decision() {
   return (
-    <SectionAnchor id="decision" accent="conclusiones">
+    <SectionAnchor id="decision" accent="conclusiones" deferOffscreen>
       <header className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-conclusiones">
           Capítulo 5 de 6
@@ -53,8 +54,10 @@ export function Decision() {
         </p>
       </header>
 
+      <div className="mb-8">
+      <TableScrollHint />
       <div
-        className="mb-8 overflow-x-auto rounded-lg border border-slate-200"
+        className="overflow-x-auto rounded-lg border border-slate-200"
         role="region"
         aria-label="Tabla de decisión: necesidad y método recomendado"
       >
@@ -87,6 +90,7 @@ export function Decision() {
           </tbody>
         </table>
       </div>
+      </div>
 
       <p className="mb-4 text-base leading-relaxed text-slate-700">
         Los números respaldan la tabla. Las cuatro métricas estándar de la
@@ -94,7 +98,7 @@ export function Decision() {
         24 puntos observados:
       </p>
 
-      <Card title="Comparación de métodos en el dataset Cumbres">
+      <Card title="Comparación de métodos con los datos de Cumbres">
         <ErrorComparison />
       </Card>
 

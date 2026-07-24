@@ -46,7 +46,7 @@ function clampToDomain(y: number): number {
 }
 
 /**
- * Playground unificado: método, grado y hora en una sola experiencia. Todos
+ * Simulador interactivo unificado: método, grado y hora en una sola experiencia. Todos
  * los controles leen y escriben el store de zustand, por lo que la gráfica,
  * la predicción puntual, el resumen del ajuste y los botones de exportación
  * reflejan siempre el mismo estado.
@@ -88,7 +88,10 @@ export function MethodPlayground() {
         highlightX={sampleX}
         highlightY={clampToDomain(prediction)}
       />
-      <div className="rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900">
+      <div
+        aria-live="polite"
+        className="rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900"
+      >
         <p className="font-semibold">Predicción puntual</p>
         <p className="mt-1">
           A las <span className="font-mono">{formatHour(sampleX)}</span>,{' '}

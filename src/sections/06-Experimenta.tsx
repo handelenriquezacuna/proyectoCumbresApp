@@ -6,13 +6,13 @@ import { SectionAnchor } from '@/components/layout/SectionAnchor';
 
 /**
  * Capítulo 6 (#experimenta): cierre interactivo de la historia. Unifica el
- * antiguo playground del caso y el paso "Tu turno" del recorrido guiado en
+ * antiguo simulador del caso y el paso "Tu turno" del recorrido guiado en
  * una sola experiencia con método, grado y hora, más la exportación del
  * resultado en CSV y PDF.
  */
 export function Experimenta() {
   return (
-    <SectionAnchor id="experimenta" accent="plan">
+    <SectionAnchor id="experimenta" accent="plan" deferOffscreen>
       <header className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
           Capítulo 6 de 6

@@ -2,7 +2,7 @@ import { Quiz } from '@/components/quiz/Quiz';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
 
 /**
- * Sección 8 (#quiz): quiz de autoevaluación con cinco preguntas de
+ * Sección 8 (#quiz): autoevaluación con cinco preguntas de
  * selección única sobre los métodos numéricos discutidos en el informe
  * y los indicadores energéticos del caso Cumbres Data Center.
  */
@@ -14,7 +14,7 @@ export function QuizSection() {
           Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-          Quiz de Repaso
+          Autoevaluación
         </h2>
       </header>
 

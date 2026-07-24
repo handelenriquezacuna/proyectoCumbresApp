@@ -13,12 +13,12 @@ export function Aplicaciones() {
           Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
-          Aplicaciones en Data Centers
+          Aplicaciones en Centros de Datos
         </h2>
       </header>
 
       <p className="mb-4 text-base leading-relaxed text-slate-700">
-        Un data center es una infraestructura crítica que opera 24 horas al día
+        Un centro de datos es una infraestructura crítica que opera 24 horas al día
         y cuya factura eléctrica representa entre el 30 % y el 50 % del costo
         operativo total (Koomey, 2011). La aplicación de métodos numéricos a su
         gestión energética se materializa en cuatro frentes complementarios.
@@ -39,10 +39,10 @@ export function Aplicaciones() {
       </h3>
       <p className="mb-4 text-base leading-relaxed text-slate-700">
         El sistema de climatización consume entre 35 % y 45 % de la energía del
-        data center, y su eficiencia depende de la temperatura del aire de
+        centro de datos, y su eficiencia depende de la temperatura del aire de
         retorno y la carga TI prevista. Las directrices térmicas de ASHRAE
         (2021) recomiendan operar dentro del rango A1 (18–27 °C), y el modelo
-        numérico de demanda permite ajustar los setpoints horarios con
+        numérico de demanda permite ajustar los puntos de consigna horarios con
         antelación, evitando rampas térmicas bruscas.
       </p>
 

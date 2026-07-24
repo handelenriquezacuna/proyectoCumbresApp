@@ -36,7 +36,7 @@ export function Implementacion() {
       >
         <p className="font-semibold">Atención: fenómeno de Runge</p>
         <p className="mt-1 leading-relaxed">
-          La interpolación polinómica sobre los 24 puntos del dataset produce
+          La interpolación polinómica sobre los 24 puntos del conjunto de datos produce
           oscilaciones extremas cerca de las horas 0 y 23. En esta aplicación,
           los polinomios de Newton y Lagrange de grado 23 oscilan entre
           aproximadamente −59 000 y +66 000 kW en los extremos, lo cual

@@ -179,7 +179,9 @@ describe('Quiz', () => {
 
     expect(screen.getByRole('region', { name: /resultado/i })).toBeInTheDocument();
 
-    const resetBtn = screen.getByRole('button', { name: /reiniciar quiz/i });
+    const resetBtn = screen.getByRole('button', {
+      name: /reiniciar autoevaluación/i,
+    });
     fireEvent.click(resetBtn);
 
     expect(screen.queryByRole('region', { name: /resultado/i })).toBeNull();

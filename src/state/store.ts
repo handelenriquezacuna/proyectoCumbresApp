@@ -8,7 +8,7 @@ type State = {
   polynomialDegree: number;
   /** Hora consultada por la usuaria (0..23, decimales permitidos). */
   sampleX: number;
-  /** Respuestas del quiz: índice de pregunta → índice de opción elegida. */
+  /** Respuestas de la autoevaluación: índice de pregunta → índice de opción elegida. */
   quizAnswers: Record<number, number>;
   setMethod: (m: Method) => void;
   setDegree: (d: number) => void;

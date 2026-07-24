@@ -31,7 +31,7 @@ export function Futuro() {
       <p className="mb-4 text-base leading-relaxed text-slate-700">
         Una segunda frontera es la integración del modelo en sistemas BMS
         (Building Management Systems) capaces de actuar en tiempo real sobre
-        chillers, UPS y bancos de baterías. El ajuste numérico deja de ser un
+        enfriadoras, UPS y bancos de baterías. El ajuste numérico deja de ser un
         informe semanal para convertirse en una señal de control que se
         actualiza con cada nueva muestra (ASHRAE, 2021).
       </p>

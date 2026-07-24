@@ -33,6 +33,8 @@ export interface MiniChartProps {
   heightClass?: string;
   /** Mostrar puntos observados como scatter rojo. */
   showObserved?: boolean;
+  /** Descripción accesible de qué compara la gráfica (rol img). */
+  ariaLabel?: string;
 }
 
 function ChartTooltip({ active, payload }: TooltipContentProps) {
@@ -68,9 +70,10 @@ export function MiniChart({
   yDomain = [1100, 1600],
   heightClass = 'h-64',
   showObserved = true,
+  ariaLabel = 'Gráfica de carga eléctrica en kilovatios por hora del día',
 }: MiniChartProps) {
   return (
-    <div className={`w-full ${heightClass}`}>
+    <div className={`w-full ${heightClass}`} role="img" aria-label={ariaLabel}>
       <ResponsiveContainer width="100%" height="100%">
         <ComposedChart margin={{ top: 8, right: 16, left: 8, bottom: 24 }}>
           <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
@@ -105,7 +108,7 @@ export function MiniChart({
               data={s.data}
               type="monotone"
               dataKey="y"
-              name={s.name}
+              name={`${s.name} (estimado)`}
               stroke={s.color}
               strokeWidth={2}
               strokeDasharray={s.dashed ? '4 4' : undefined}
@@ -117,7 +120,7 @@ export function MiniChart({
             <Scatter
               data={observed}
               dataKey="y"
-              name="Observado"
+              name="Observado (medición)"
               fill="#dc2626"
               line={{ stroke: '#dc2626', strokeDasharray: '3 3', strokeWidth: 1 }}
               shape="circle"
