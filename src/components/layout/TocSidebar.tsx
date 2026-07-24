@@ -11,11 +11,11 @@ export const DEFAULT_TOC: ReadonlyArray<TocItem> = [
   { id: 'aplicaciones', label: 'Aplicaciones' },
   { id: 'caso', label: 'Caso Cumbres' },
   { id: 'implementacion', label: 'Implementación' },
+  { id: 'hoja', label: 'Hoja de cálculo' },
   { id: 'futuro', label: 'Futuro' },
   { id: 'conclusiones', label: 'Conclusiones' },
   { id: 'prueba', label: 'Pruébalo tú mismo' },
   { id: 'quiz', label: 'Quiz' },
-  { id: 'hoja', label: 'Hoja de cálculo' },
 ];
 
 /**

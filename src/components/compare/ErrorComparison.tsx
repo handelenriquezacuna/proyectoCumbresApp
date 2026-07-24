@@ -82,23 +82,15 @@ function buildVariants(): Variant[] {
   ];
 }
 
-function CompareTooltip({
-  active,
-  payload,
-  label,
-}: TooltipContentProps) {
+function CompareTooltip({ active, payload, label }: TooltipContentProps) {
   if (!active || !payload || payload.length === 0) return null;
   const x = typeof label === 'number' ? label : Number(label ?? 0);
   return (
     <div className="rounded border border-slate-200 bg-white px-3 py-2 text-xs shadow-md">
-      <div className="font-semibold text-slate-800">
-        Hora {formatNumber(x, 2)}
-      </div>
+      <div className="font-semibold text-slate-800">Hora {formatNumber(x, 2)}</div>
       {payload.map((p) => {
         const value =
-          typeof p.value === 'number'
-            ? formatNumber(p.value, 0)
-            : String(p.value ?? '');
+          typeof p.value === 'number' ? formatNumber(p.value, 0) : String(p.value ?? '');
         return (
           <div key={String(p.dataKey)} className="flex justify-between gap-3">
             <span style={{ color: typeof p.color === 'string' ? p.color : undefined }}>
@@ -238,6 +230,21 @@ export function ErrorComparison() {
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className="rounded-md border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600">
+        <p>
+          <span className="font-semibold text-slate-800">
+            ¿Por qué Newton y Lagrange muestran MSE 0 y R² 1?
+          </span>{' '}
+          Porque la interpolación pasa exactamente por los puntos medidos: evaluada en esos mismos
+          puntos no tiene error. Eso <em>no</em> significa que prediga mejor entre horas.
+        </p>
+        <p className="mt-1.5">
+          A los mínimos cuadrados sí se les mide error porque su curva de ajuste no está obligada a
+          pasar por los puntos: busca la tendencia global y acepta pequeñas desviaciones en cada
+          hora.
+        </p>
       </div>
 
       <div className="h-96 w-full" aria-label="Curvas ajustadas comparadas">

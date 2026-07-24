@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { StoryBridge } from '@/components/layout/StoryBridge';
 import { TocSidebar } from '@/components/layout/TocSidebar';
 import { Aplicaciones } from '@/sections/04-Aplicaciones';
 import { CasoCumbres } from '@/sections/05-CasoCumbres';
@@ -40,15 +41,48 @@ function App() {
 
           <main className="min-w-0">
             <Conceptos />
+            <StoryBridge to="metodos" label="Métodos">
+              Ya sabés qué es la demanda eléctrica y por qué importa medirla.
+              Ahora, las herramientas matemáticas para modelarla.
+            </StoryBridge>
             <Metodos />
+            <StoryBridge to="aplicaciones" label="Aplicaciones">
+              Con Newton, Lagrange y mínimos cuadrados en la caja de
+              herramientas, veamos dónde se usan en el mundo real.
+            </StoryBridge>
             <Aplicaciones />
+            <StoryBridge to="caso" label="Caso Cumbres">
+              De la teoría a nuestro caso: un data center en Belén que necesita
+              predecir su consumo.
+            </StoryBridge>
             <CasoCumbres />
+            <StoryBridge to="implementacion" label="Implementación">
+              Con los 24 datos del caso listos, toca aplicar los métodos y
+              medir cuál predice mejor.
+            </StoryBridge>
             <Implementacion />
-            <Futuro />
-            <Conclusiones />
-            <WalkthroughSection />
-            <QuizSection />
+            <StoryBridge to="hoja" label="Hoja de cálculo">
+              ¿Y de dónde sale cada número? Acá está el cálculo completo, celda
+              por celda, como en el Excel del curso.
+            </StoryBridge>
             <HojaCalculo />
+            <StoryBridge to="futuro" label="Futuro">
+              El modelo funciona hoy. ¿Hacia dónde evoluciona este campo?
+            </StoryBridge>
+            <Futuro />
+            <StoryBridge to="conclusiones" label="Conclusiones">
+              Recapitulemos lo que el análisis nos dejó.
+            </StoryBridge>
+            <Conclusiones />
+            <StoryBridge to="prueba" label="Pruébalo tú mismo">
+              ¿Todo claro? Ahora reproducí el razonamiento vos mismo, paso a
+              paso.
+            </StoryBridge>
+            <WalkthroughSection />
+            <StoryBridge to="quiz" label="Quiz">
+              Para cerrar: cinco preguntas rápidas para comprobar lo aprendido.
+            </StoryBridge>
+            <QuizSection />
           </main>
         </div>
       </div>

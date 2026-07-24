@@ -26,12 +26,16 @@ export function Hero() {
         <p className="mb-8 text-lg text-slate-200 sm:text-xl md:text-2xl">
           Predicción de demanda eléctrica en data centers
         </p>
-        <p className="mx-auto mb-10 max-w-2xl text-sm text-slate-300 sm:text-base">
+        <p className="mx-auto mb-4 max-w-2xl text-sm text-slate-300 sm:text-base">
           El consumo energético de un data center Tier III sigue patrones
           horarios estables que pueden modelarse con métodos numéricos
           clásicos (Uptime Institute, 2024). Este informe interactivo recorre
           los fundamentos, aplica cuatro técnicas al caso Cumbres y compara
           sus errores sobre datos calibrados con la literatura del sector.
+        </p>
+        <p className="mx-auto mb-10 max-w-2xl text-sm font-medium text-blue-200 sm:text-base">
+          Un recorrido de principio a fin: del concepto al cálculo verificado
+          celda por celda.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <a

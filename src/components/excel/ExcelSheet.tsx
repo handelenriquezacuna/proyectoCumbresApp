@@ -36,6 +36,8 @@ export interface ExcelSheetProps {
   startRow?: number;
   /** Clase de alto máximo para scroll vertical (p.ej. 'max-h-[26rem]'). */
   maxHeightClassName?: string;
+  /** Muestra la leyenda del código de colores debajo de la grilla. */
+  showLegend?: boolean;
   className?: string;
   ariaLabel?: string;
 }
@@ -83,6 +85,40 @@ export const EXCEL_COL_HEADER_CLASS =
 export const EXCEL_ROW_HEADER_CLASS =
   'border-b border-r border-slate-300 bg-slate-200 px-2 py-1 text-center text-xs font-normal text-slate-600';
 
+/** Ítems de la leyenda de colores; los swatches replican KIND_CLASSES. */
+const LEGEND_ITEMS: ReadonlyArray<{ swatch: string; label: string }> = [
+  { swatch: 'border border-blue-700 bg-blue-700', label: 'azul = dato de entrada' },
+  { swatch: 'border border-slate-900 bg-slate-900', label: 'negro = celda calculada' },
+  { swatch: 'border border-yellow-300 bg-yellow-100', label: 'amarillo = resultado' },
+  { swatch: 'border border-slate-300 bg-slate-200', label: 'gris = encabezado' },
+];
+
+/**
+ * Leyenda compacta del código de colores del machote. Reutilizable fuera de
+ * ExcelSheet (p.ej. junto a tablas que usan excelCellClass) o vía la prop
+ * showLegend de ExcelSheet.
+ */
+export function ExcelLegend({ className }: { className?: string }) {
+  return (
+    <ul
+      className={[
+        'flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600',
+        className ?? '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      aria-label="Código de colores de las celdas"
+    >
+      {LEGEND_ITEMS.map((item) => (
+        <li key={item.label} className="flex items-center gap-1.5">
+          <span className={`inline-block h-2.5 w-2.5 rounded-sm ${item.swatch}`} aria-hidden />
+          {item.label}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 interface SelectedCell {
   r: number;
   c: number;
@@ -104,21 +140,18 @@ export function ExcelSheet({
   sheetName,
   startRow = 1,
   maxHeightClassName,
+  showLegend = false,
   className,
   ariaLabel,
 }: ExcelSheetProps) {
   const [selected, setSelected] = useState<SelectedCell | null>(null);
 
-  const colCount = useMemo(
-    () => rows.reduce((max, row) => Math.max(max, row.length), 0),
-    [rows],
-  );
+  const colCount = useMemo(() => rows.reduce((max, row) => Math.max(max, row.length), 0), [rows]);
 
   const selectedCell: ExcelCellData | null =
     selected === null ? null : (rows[selected.r]?.[selected.c] ?? null);
 
-  const selectedRef =
-    selected === null ? '' : `${colLetter(selected.c)}${startRow + selected.r}`;
+  const selectedRef = selected === null ? '' : `${colLetter(selected.c)}${startRow + selected.r}`;
 
   const barContent =
     selectedCell === null
@@ -191,10 +224,7 @@ export function ExcelSheet({
             {rows.map((row, r) => (
               // eslint-disable-next-line react/no-array-index-key
               <tr key={r}>
-                <th
-                  scope="row"
-                  className={`sticky left-0 z-10 ${EXCEL_ROW_HEADER_CLASS}`}
-                >
+                <th scope="row" className={`sticky left-0 z-10 ${EXCEL_ROW_HEADER_CLASS}`}>
                   {startRow + r}
                 </th>
                 {Array.from({ length: colCount }, (_, c) => {
@@ -242,6 +272,8 @@ export function ExcelSheet({
           {sheetName}
         </div>
       ) : null}
+
+      {showLegend ? <ExcelLegend className="mt-2" /> : null}
     </div>
   );
 }
