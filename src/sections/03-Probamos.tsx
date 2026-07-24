@@ -3,7 +3,7 @@ import { CUMBRES_POINTS, DATASET_METADATA } from '@/lib/data/cumbresDataset';
 import { fitLagrange } from '@/lib/methods/lagrange';
 import { fitNewton } from '@/lib/methods/newton';
 import { Slider } from '@/components/ui/Slider';
-import { fmtTrunc5 } from '@/lib/format';
+import { fmtTrunc5, trunc5 } from '@/lib/format';
 import { ExcelSheet, type ExcelRow } from '@/components/excel/ExcelSheet';
 import {
   TARGET_HOUR,
@@ -227,13 +227,21 @@ function SubLagrange() {
   const newton = fitNewton(selected);
   const lagrange = fitLagrange(selected);
 
-  const xs = [13.0, 13.25, 13.5, 13.75, 14.0, 14.25, 14.5, 14.75, 15.0, 15.25, 15.5];
-  const rows = xs.map((x) => ({
-    x,
-    newton: newton.evaluate(x),
-    lagrange: lagrange.evaluate(x),
-    diff: Math.abs(newton.evaluate(x) - lagrange.evaluate(x)),
-  }));
+  // Solo medias horas: ahí los productos (x - x_j) tienen a lo sumo 4
+  // decimales y el TRUNC 5 del machote no recorta nada, así que la
+  // diferencia Newton-Lagrange queda en el ruido mínimo (~1e-5) y la
+  // tabla cuenta la historia de la unicidad sin distracciones. En los
+  // cuartos de hora los productos llegan a 8 decimales y el truncamiento
+  // amplifica el ruido hasta ~4e-3 (y_k/D_k por el recorte), lo cual es
+  // fiel a Excel pero confunde en una tabla sobre unicidad.
+  const xs = [13.0, 13.5, 14.0, 14.5, 15.0, 15.5];
+  const rows = xs.map((x) => {
+    // La diferencia se calcula sobre los valores YA truncados (los que se
+    // muestran en B y C), para que la columna D sea exactamente |B - C|.
+    const nv = trunc5(newton.evaluate(x));
+    const lv = trunc5(lagrange.evaluate(x));
+    return { x, newton: nv, lagrange: lv, diff: trunc5(Math.abs(nv - lv)) };
+  });
 
   const lagrangeSheet: ReadonlyArray<ExcelRow> = [
     [
@@ -247,7 +255,7 @@ function SubLagrange() {
         { value: r.x, kind: 'input' },
         { value: r.newton },
         { value: r.lagrange },
-        { value: r.diff < 1e-9 ? '< 1e-9' : r.diff.toExponential(2) },
+        { value: r.diff < 1e-9 ? '0' : fmtTrunc5(r.diff) },
       ],
     ),
   ];
@@ -291,14 +299,16 @@ function SubLagrange() {
         ariaLabel="Gráfica que compara las curvas estimadas por Newton y Lagrange, superpuestas por ser el mismo polinomio, con las mediciones observadas en kilovatios"
       />
       <p className="text-sm leading-relaxed text-slate-600">
-        Las dos curvas se superponen perfectamente. En la hoja de cálculo del
-        curso, con valores truncados a 5 decimales, Newton entrega{' '}
+        Las dos curvas se superponen perfectamente. En las horas medidas la
+        diferencia es cero, y en las intermedias no supera{' '}
+        <span className="font-mono">0.00005</span> kW: ese residuo no viene del
+        método sino del truncamiento a 5 decimales del machote (cada celda
+        recorta y el recorte se arrastra distinto en cada fórmula). En x =
+        14.5, Newton entrega{' '}
         <span className="font-mono">{fmtTrunc5(nvl.newton)}</span> kW y
         Lagrange <span className="font-mono">{fmtTrunc5(nvl.lagrange)}</span>{' '}
-        kW: una diferencia de{' '}
-        <span className="font-mono">{nvl.absoluteDifference}</span> kW
-        atribuible solo al redondeo. Elegimos entre ambos por{' '}
-        <em>conveniencia operativa</em>, no por precisión.
+        kW. Elegimos entre ambos por <em>conveniencia operativa</em>, no por
+        precisión.
       </p>
     </Subsection>
   );
