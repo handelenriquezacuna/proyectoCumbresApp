@@ -10,7 +10,7 @@ export function Aplicaciones() {
     <SectionAnchor id="aplicaciones" accent="aplicaciones">
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-aplicaciones">
-          Capítulo 3
+          Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
           Aplicaciones en Data Centers

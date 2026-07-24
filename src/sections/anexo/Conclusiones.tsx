@@ -10,7 +10,7 @@ export function Conclusiones() {
     <SectionAnchor id="conclusiones" accent="conclusiones">
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-conclusiones">
-          Capítulo 8
+          Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
           Conclusiones

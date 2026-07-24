@@ -10,7 +10,7 @@ export function Futuro() {
     <SectionAnchor id="futuro" accent="futuro">
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-futuro">
-          Capítulo 7
+          Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
           Perspectivas Futuras

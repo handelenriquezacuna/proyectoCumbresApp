@@ -1,4 +1,11 @@
+import { CUMBRES_POINTS } from '@/lib/data/cumbresDataset';
 import type { Point } from '@/lib/methods/types';
+
+/** Hora ficticia para la cual el operador necesita estimar la carga. */
+export const TARGET_HOUR = 14.5;
+
+/** "Verdad de campo" sintética para 14:30: media de las observaciones a 14 y 15. */
+export const TARGET_TRUTH_KW = (CUMBRES_POINTS[14]!.y + CUMBRES_POINTS[15]!.y) / 2; // 1497.5
 
 /**
  * Selecciona los `n` puntos del dataset más cercanos a un valor `target` en x,

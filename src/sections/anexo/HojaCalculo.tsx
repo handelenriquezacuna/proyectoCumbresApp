@@ -453,7 +453,7 @@ export function HojaCalculo() {
     <SectionAnchor id="hoja" accent="hoja">
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-hoja">
-          Capítulo 6
+          Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">Hoja de cálculo</h2>
       </header>

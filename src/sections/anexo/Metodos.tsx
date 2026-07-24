@@ -12,7 +12,7 @@ export function Metodos() {
     <SectionAnchor id="metodos" accent="metodos">
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-metodos">
-          Capítulo 2
+          Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
           Métodos y Técnicas

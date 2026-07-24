@@ -11,7 +11,7 @@ export function QuizSection() {
     <SectionAnchor id="quiz">
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">
-          Capítulo 9
+          Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
           Quiz de Repaso

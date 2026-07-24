@@ -4,6 +4,7 @@ import {
   ComposedChart,
   Legend,
   Line,
+  ReferenceDot,
   ResponsiveContainer,
   Scatter,
   Tooltip,
@@ -81,13 +82,24 @@ function FitTooltip({
   );
 }
 
+export interface InterpolationChartProps {
+  /** Hora a destacar con un punto amarillo (ej. la hora consultada). */
+  highlightX?: number;
+  /** Valor (ya recortado al dominio Y) del punto destacado. */
+  highlightY?: number;
+}
+
 /**
  * Gráfica comparativa entre los 24 puntos observados (scatter punteado) y
  * el polinomio ajustado, muestreado en 200 puntos en x ∈ [0, 23]. El eje Y
  * se recorta a [1100, 1600] para que las oscilaciones de Runge (en Newton y
- * Lagrange con 24 puntos) no rompan el lienzo.
+ * Lagrange con 24 puntos) no rompan el lienzo. Acepta un punto destacado
+ * opcional para marcar la predicción de la hora consultada.
  */
-export function InterpolationChart() {
+export function InterpolationChart({
+  highlightX,
+  highlightY,
+}: InterpolationChartProps = {}) {
   const activeMethod = useCumbresStore((s) => s.activeMethod);
   const polynomialDegree = useCumbresStore((s) => s.polynomialDegree);
 
@@ -167,6 +179,16 @@ export function InterpolationChart() {
             line={{ stroke: '#dc2626', strokeDasharray: '3 3', strokeWidth: 1 }}
             shape="circle"
           />
+          {highlightX !== undefined && highlightY !== undefined && (
+            <ReferenceDot
+              x={highlightX}
+              y={highlightY}
+              r={6}
+              fill="#facc15"
+              stroke="#854d0e"
+              strokeWidth={2}
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     </div>

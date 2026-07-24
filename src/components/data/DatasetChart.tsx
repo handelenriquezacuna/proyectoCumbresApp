@@ -2,6 +2,7 @@ import {
   CartesianGrid,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   type TooltipContentProps,
@@ -32,13 +33,58 @@ function CumbresTooltip({
   );
 }
 
+type AnnotationViewBox = { x?: number; y?: number };
+
+/**
+ * Etiqueta multilinea para la ReferenceLine de anotación. Recharts inyecta
+ * `viewBox` (coordenadas del segmento) al clonar el elemento pasado en la
+ * prop `label`, y aquí se dibuja el texto anclado a la izquierda de la línea.
+ */
+function AnnotationLabel({
+  viewBox,
+  lines = [],
+}: {
+  viewBox?: AnnotationViewBox;
+  lines?: ReadonlyArray<string>;
+}) {
+  const x = viewBox?.x ?? 0;
+  const y = viewBox?.y ?? 0;
+  return (
+    <g>
+      {lines.map((line, i) => (
+        <text
+          key={line}
+          x={x - 8}
+          y={y + 16 + i * 14}
+          textAnchor="end"
+          fontSize={11}
+          fill="#92400e"
+        >
+          {line}
+        </text>
+      ))}
+    </g>
+  );
+}
+
+export interface DatasetChartProps {
+  /** Hora a destacar con una línea vertical punteada (ej. 14.5). */
+  referenceX?: number;
+  /** Texto de la anotación, una entrada por línea dibujada. */
+  referenceLabelLines?: ReadonlyArray<string>;
+}
+
 /**
  * Recharts LineChart de los 24 puntos crudos del Cumbres Data Center.
  * Muestra una línea suave y un punto por cada observación; el dominio Y se
  * fija a [1100, 1600] para que la curva ocupe la mitad superior del lienzo
- * y se aprecie el pico vespertino.
+ * y se aprecie el pico vespertino. Opcionalmente marca una hora con una
+ * línea de referencia anotada (usada en "Los datos" para señalar las 14:30).
  */
-export function DatasetChart() {
+export function DatasetChart({
+  referenceX,
+  referenceLabelLines,
+}: DatasetChartProps = {}) {
   const data: Datum[] = CUMBRES_POINTS.map((p) => ({ x: p.x, y: p.y }));
 
   return (
@@ -74,6 +120,15 @@ export function DatasetChart() {
             }}
           />
           <Tooltip content={(props) => <CumbresTooltip {...props} />} />
+          {referenceX !== undefined && (
+            <ReferenceLine
+              x={referenceX}
+              stroke="#d97706"
+              strokeWidth={2}
+              strokeDasharray="5 4"
+              label={<AnnotationLabel lines={referenceLabelLines} />}
+            />
+          )}
           <Line
             type="monotone"
             dataKey="y"

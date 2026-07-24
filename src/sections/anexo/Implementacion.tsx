@@ -1,19 +1,18 @@
-import { Card } from '@/components/ui/Card';
-import { ErrorComparison } from '@/components/compare/ErrorComparison';
 import { SectionAnchor } from '@/components/layout/SectionAnchor';
 
 /**
- * Sección 5 (#implementacion): describe el flujo de trabajo numérico
- * (Excel, GeoGebra, código TypeScript), recuerda el riesgo de Runge con
- * polinomios de alto grado y presenta la tabla comparativa de métricas
- * (MSE, MAE, MAPE, R²).
+ * Anexo (#implementacion): describe el flujo de trabajo numérico
+ * (Excel, GeoGebra, código TypeScript) y recuerda el riesgo de Runge con
+ * polinomios de alto grado. La tabla comparativa de métricas (MSE, MAE,
+ * MAPE, R²) vive en el capítulo "La decisión" (#decision) y aquí solo se
+ * referencia para no duplicarla.
  */
 export function Implementacion() {
   return (
     <SectionAnchor id="implementacion" accent="implementacion">
       <header className="mb-4">
         <p className="text-xs font-semibold uppercase tracking-widest text-cumbres-implementacion">
-          Capítulo 5
+          Anexo
         </p>
         <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
           Implementación Numérica
@@ -39,9 +38,9 @@ export function Implementacion() {
         <p className="mt-1 leading-relaxed">
           La interpolación polinómica sobre los 24 puntos del dataset produce
           oscilaciones extremas cerca de las horas 0 y 23. En esta aplicación,
-          los polinomios de Newton y Lagrange de grado 23 muestran amplitudes
-          superiores a 10<sup>6</sup> kW en los extremos, lo cual carece de
-          sentido físico. Se recomienda usar mínimos cuadrados de grado
+          los polinomios de Newton y Lagrange de grado 23 oscilan entre
+          aproximadamente −59 000 y +66 000 kW en los extremos, lo cual
+          carece de sentido físico. Se recomienda usar mínimos cuadrados de grado
           3 a 6 para fines de pronóstico.
         </p>
       </div>
@@ -56,9 +55,17 @@ export function Implementacion() {
         modelo combina MAPE bajo (idealmente menor a 3 %) con R² cercano a 1.
       </p>
 
-      <Card title="Comparación de métodos en el dataset Cumbres">
-        <ErrorComparison />
-      </Card>
+      <p className="rounded-md border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+        La tabla comparativa completa de métricas y las curvas superpuestas de
+        los cuatro métodos se presentan en el capítulo{' '}
+        <a
+          className="font-semibold text-blue-700 underline underline-offset-2"
+          href="#decision"
+        >
+          La decisión
+        </a>
+        .
+      </p>
     </SectionAnchor>
   );
 }
