@@ -12,7 +12,7 @@ export function Footer({
     <footer className="mt-16 border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500 sm:text-sm">
       <div className="mx-auto max-w-6xl px-4">
         <p>
-          Universidad Fidélitas · Grupo 3 · {year} ·{' '}
+          Universidad Fidélitas · {year} ·{' '}
           <a
             href={repoUrl}
             target="_blank"

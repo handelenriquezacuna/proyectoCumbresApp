@@ -22,7 +22,7 @@ export function Desafio() {
     >
       <div className="mx-auto max-w-4xl px-4 text-center">
         <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-blue-300 sm:text-sm">
-          Universidad Fidélitas · MA-108 Métodos Numéricos · Grupo 3
+          Universidad Fidélitas · MA-108 Métodos Numéricos
         </p>
         <h1
           id="desafio-title"
