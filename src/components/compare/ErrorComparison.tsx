@@ -105,26 +105,40 @@ function CompareTooltip({ active, payload, label }: TooltipContentProps) {
   );
 }
 
+/** Métodos de interpolación: su error en los nodos es 0 por construcción,
+ * así que quedan fuera de la competencia de métricas (se muestran en gris). */
+const INTERP_KEYS: ReadonlyArray<Method> = ['newton', 'lagrange'];
+
+/** Gridlines base (mismas de ExcelSheet) + variantes propias de esta tabla. */
+const CELL_BASE = 'border-b border-r border-slate-300 px-2 py-1 whitespace-nowrap';
+const CELL_WINNER = `${CELL_BASE} bg-emerald-50 font-semibold text-emerald-900`;
+const CELL_INTERP = `${CELL_BASE} bg-white text-slate-400`;
+
 /**
  * Tabla y gráfico comparativos para los cuatro métodos numéricos. Todos los
  * ajustes se calculan una sola vez sobre los 24 puntos del Cumbres Data
- * Center; la fila con menor MSE se resalta en color verde para señalar el
- * mejor desempeño global.
+ * Center. Las flechas de los encabezados indican la dirección de lectura
+ * (↓ gana el menor, ↑ gana el mayor), la interpolación se muestra en gris
+ * porque su cero es por construcción, y el mejor ajuste se resalta en verde.
  */
 export function ErrorComparison() {
   const variants = useMemo(() => buildVariants(), []);
 
-  const minMseKey = useMemo<Method>(() => {
-    let bestIdx = 0;
-    let bestMse = Number.POSITIVE_INFINITY;
-    for (let i = 0; i < variants.length; i++) {
-      const m = variants[i]!.fit.metrics.mse;
-      if (Number.isFinite(m) && m < bestMse) {
-        bestMse = m;
-        bestIdx = i;
-      }
+  const { bestKey, winsAll } = useMemo(() => {
+    const ajustes = variants.filter((v) => !INTERP_KEYS.includes(v.key));
+    let best = ajustes[0]!;
+    for (const v of ajustes) {
+      if (v.fit.metrics.mse < best.fit.metrics.mse) best = v;
     }
-    return variants[bestIdx]!.key;
+    const all = ajustes.every(
+      (v) =>
+        v.key === best.key ||
+        (best.fit.metrics.mse <= v.fit.metrics.mse &&
+          best.fit.metrics.mae <= v.fit.metrics.mae &&
+          best.fit.metrics.mape <= v.fit.metrics.mape &&
+          best.fit.metrics.r2 >= v.fit.metrics.r2),
+    );
+    return { bestKey: best.key, winsAll: all };
   }, [variants]);
 
   const sampleRows = useMemo<SampleRow[]>(() => {
@@ -180,60 +194,85 @@ export function ErrorComparison() {
               <th scope="col" className={excelCellClass('header', 'text-left')}>
                 Método
               </th>
-              <th scope="col" className={excelCellClass('header', 'text-right')}>
-                MSE
+              <th
+                scope="col"
+                className={excelCellClass('header', 'text-right')}
+                title="Gana el número menor: es un error"
+              >
+                MSE ↓
               </th>
-              <th scope="col" className={excelCellClass('header', 'text-right')}>
-                MAE
+              <th
+                scope="col"
+                className={excelCellClass('header', 'text-right')}
+                title="Gana el número menor: es un error"
+              >
+                MAE ↓
               </th>
-              <th scope="col" className={excelCellClass('header', 'text-right')}>
-                MAPE (%)
+              <th
+                scope="col"
+                className={excelCellClass('header', 'text-right')}
+                title="Gana el número menor: es un error"
+              >
+                MAPE (%) ↓
               </th>
-              <th scope="col" className={excelCellClass('header', 'text-right')}>
-                R²
+              <th
+                scope="col"
+                className={excelCellClass('header', 'text-right')}
+                title="Gana el número mayor: es cuánta variación explica"
+              >
+                R² ↑
               </th>
             </tr>
           </thead>
           <tbody>
             {variants.map((v, r) => {
-              const isBest = v.key === minMseKey;
-              const numKind = isBest ? ('result' as const) : ('computed' as const);
+              const isInterp = INTERP_KEYS.includes(v.key);
+              const isBest = v.key === bestKey;
+              const cellCls = isBest
+                ? `${CELL_WINNER} text-right tabular-nums`
+                : isInterp
+                  ? `${CELL_INTERP} text-right tabular-nums`
+                  : excelCellClass('computed', 'text-right tabular-nums');
+              const labelCls = isBest
+                ? `${CELL_WINNER} text-left`
+                : isInterp
+                  ? `${CELL_INTERP} text-left`
+                  : excelCellClass('label', 'text-left');
+              const sufijo = isInterp ? '*' : '';
               return (
                 <tr key={v.key}>
                   <th scope="row" className={EXCEL_ROW_HEADER_CLASS}>
                     {r + 2}
                   </th>
-                  <td className={excelCellClass(isBest ? 'result' : 'label', 'text-left')}>
+                  <td className={labelCls}>
                     <span
                       className="mr-2 inline-block h-2.5 w-2.5 rounded-full align-middle"
-                      style={{ backgroundColor: v.color }}
+                      style={{ backgroundColor: v.color, opacity: isInterp ? 0.4 : 1 }}
                       aria-hidden="true"
                     />
                     {v.label}
+                    {isInterp && ' (interpolación)'}
                     {isBest && (
-                      <span className="ml-2 rounded bg-yellow-200 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-yellow-900">
-                        mejor MSE
+                      <span className="ml-2 rounded bg-emerald-200 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-900">
+                        ✓ {winsAll ? 'gana 4 de 4' : 'mejor MSE'}
                       </span>
                     )}
                   </td>
-                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
-                    {fmtTrunc5(v.fit.metrics.mse)}
-                  </td>
-                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
-                    {fmtTrunc5(v.fit.metrics.mae)}
-                  </td>
-                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
-                    {fmtTrunc5(v.fit.metrics.mape)}
-                  </td>
-                  <td className={excelCellClass(numKind, 'text-right tabular-nums')}>
-                    {fmtTrunc5(v.fit.metrics.r2)}
-                  </td>
+                  <td className={cellCls}>{fmtTrunc5(v.fit.metrics.mse) + sufijo}</td>
+                  <td className={cellCls}>{fmtTrunc5(v.fit.metrics.mae) + sufijo}</td>
+                  <td className={cellCls}>{fmtTrunc5(v.fit.metrics.mape) + sufijo}</td>
+                  <td className={cellCls}>{fmtTrunc5(v.fit.metrics.r2) + sufijo}</td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
+      <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
+        ↓ gana el número menor (son errores) · ↑ gana el mayor (es cuánta variación explica) ·
+        *cero por construcción: la interpolación pasa por los puntos medidos y no compite en esta
+        tabla.
+      </p>
       </div>
 
       <div className="rounded-md border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600">
